@@ -8,5 +8,5 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('smart_catalog_admin');
+  protected readonly title = signal('Smart Catalog Admin');
 }
