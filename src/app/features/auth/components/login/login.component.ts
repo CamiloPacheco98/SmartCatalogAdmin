@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -27,25 +29,22 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onSubmit(): void {
+  async onSubmit(): Promise<void> {
     if (this.loginForm.valid) {
       this.loading = true;
       this.errorMessage = '';
       
-      // Simular login (aquí iría tu lógica real)
-      setTimeout(() => {
+      try {
         const { email, password } = this.loginForm.value;
+        await this.authService.login(email, password);
+        // Successful login - redirect to home
+        this.router.navigate(['/home']);
         
-        // Ejemplo simple de validación
-        if (email === 'admin@example.com' && password === '123456') {
-          // Login exitoso
-          localStorage.setItem('isLoggedIn', 'true');
-          this.router.navigate(['/home']);
-        } else {
-          this.errorMessage = 'Credenciales inválidas';
-        }
+      } catch (error: any) {
+        this.errorMessage = error.message;
+      } finally {
         this.loading = false;
-      }, 1000);
+      }
     }
   }
 }
