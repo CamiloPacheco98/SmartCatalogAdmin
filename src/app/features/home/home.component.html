@@ -1,18 +1,55 @@
-<div class="home-container">
-  <!-- App Bar -->
-  <header class="app-bar">
-    <div class="app-bar-content">
-      <h1 class="app-bar-title">Home</h1>
-    </div>
-  </header>
+<!-- Main Content -->
+<main class="home-content">
+  <div class="content-wrapper">
+    <!-- PDF Upload Section -->
+      <div class="upload-section">
+        <div class="upload-card">
+          <h3>Upload PDF Document</h3>
+          <p>Select a PDF file to upload to the catalog</p>
 
-  <!-- Main Content -->
-  <main class="home-content">
-    <div class="content-wrapper">
-      <div class="welcome-card">
-        <h2>Welcome to Smart Catalog Admin</h2>
-        <p>You have successfully logged in to the dashboard.</p>
+          <div class="upload-area" [class.drag-over]="isDragOver" (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+            <div class="upload-content">
+              <div class="upload-icon">📄</div>
+              <p class="upload-text">
+                <strong>Click to browse</strong> or drag and drop your PDF file here
+              </p>
+              <p class="upload-hint">Maximum file size: 25MB</p>
+            </div>
+          </div>
+
+          <input #fileInput type="file" accept=".pdf" (change)="onFileSelected($event)" style="display: none;">
+          @if(selectedFile){
+          <div *ngIf="selectedFile" class="file-info">
+            <div class="file-details">
+              <span class="file-name">{{ selectedFile.name }}</span>
+              <span class="file-size">{{ formatFileSize(selectedFile.size) }}</span>
+            </div>
+            <button class="remove-file-btn" (click)="removeFile()">×</button>
+          </div>
+          }
+          @if(uploadError){
+          <div class="error-message">
+            {{ uploadError }}
+          </div>
+          }
+          <div class="upload-actions">
+            <button class="upload-btn" [disabled]="!selectedFile || isUploading" (click)="uploadFile()">
+              @if(!isUploading){
+              <span>Upload PDF</span>
+              }@else{
+              <span>Uploading...</span>
+              }
+
+            </button>
+          </div>
+
+          @if(uploadSuccess){
+          <div class="success-message">
+            ✅ PDF uploaded successfully!
+          </div>
+          }
+        </div>
       </div>
-    </div>
-  </main>
-</div>
+  </div>
+</main>
