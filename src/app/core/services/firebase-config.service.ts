@@ -5,6 +5,7 @@ export interface FirebaseConfig {
   apiKey: string;
   authDomain: string;
   projectId: string;
+  storageBucket: string;
 }
 
 @Injectable({
