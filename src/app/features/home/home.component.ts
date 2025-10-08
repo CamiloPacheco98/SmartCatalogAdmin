@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { StorageService } from '../../core/services/storage.service';
+import { PdfCoService } from '../../core/services/pdf-co.service';
 
 @Component({
   selector: 'app-home',
@@ -8,14 +10,22 @@ import { CommonModule } from '@angular/common';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   selectedFile: File | null = null;
   isDragOver = false;
   isUploading = false;
   uploadError: string | null = null;
   uploadSuccess = false;
+  uploadProgress: string = '';
 
-  constructor() {}
+  constructor(
+    private storageService: StorageService,
+    private pdfCoService: PdfCoService
+  ) {}
+
+  ngOnInit(): void {
+    // Componente inicializado
+  }
 
   onDragOver(event: DragEvent): void {
     event.preventDefault();
@@ -71,7 +81,7 @@ export class HomeComponent {
     this.clearMessages();
   }
 
-  uploadFile(): void {
+  async uploadFile(): Promise<void> {
     if (!this.selectedFile) {
       return;
     }
@@ -79,27 +89,139 @@ export class HomeComponent {
     this.isUploading = true;
     this.clearMessages();
 
-    // Simulate upload process
-    // In a real application, you would upload to your backend service here
-    setTimeout(() => {
+    try {
+      // Save reference to file name before processing
+      const originalFileName = this.selectedFile.name;
+      
+      // Create unique identifier for this catalog
+      const catalogId = `catalog_${Date.now()}`;
+      const magazineName = originalFileName.replace('.pdf', '');
+
+      // Process and upload page by page for better performance and progress tracking
+      const downloadUrls = await this.processAndUploadPageByPage(
+        this.selectedFile,
+        catalogId,
+        magazineName
+      );
+
+      console.log('Uploaded magazine pages:', {
+        catalogId,
+        magazineName,
+        totalPages: downloadUrls.length,
+        pages: downloadUrls
+      });
+
       this.isUploading = false;
       this.uploadSuccess = true;
+      this.uploadProgress = '';
       this.selectedFile = null;
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => {
         this.uploadSuccess = false;
       }, 3000);
-    }, 2000);
+
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      this.isUploading = false;
+      this.uploadProgress = '';
+      this.uploadError = 'Error uploading file. Please try again.';
+    }
+  }
+
+  /**
+   * Process and upload PDF page by page for better performance with large PDFs
+   */
+  private async processAndUploadPageByPage(
+    pdfFile: File,
+    catalogId: string,
+    magazineName: string
+  ): Promise<string[]> {
+    try {
+      // Step 1: Upload PDF to PDF.co
+      this.uploadProgress = 'Uploading PDF to cloud...';
+      console.log('Uploading PDF to PDF.co...');
+      const pdfUrl = await this.pdfCoService.uploadFile(pdfFile);
+      console.log('PDF uploaded to:', pdfUrl);
+
+      // Step 2: Get total page count by converting first page
+      this.uploadProgress = 'Analyzing PDF...';
+      const firstPageResponse = await this.pdfCoService.convertPdfToImages(pdfUrl, '0');
+      
+      if (firstPageResponse.error || !firstPageResponse.urls) {
+        throw new Error(firstPageResponse.message || 'Failed to analyze PDF');
+      }
+
+      // Get page count from PDF.co (we need to make multiple requests to get total)
+      // For now, we'll try converting all and handle pagination
+      let currentPage = 0;
+      let hasMorePages = true;
+      const downloadUrls: string[] = [];
+
+      // Process first page
+      this.uploadProgress = `Processing page 1...`;
+      const firstImageUrl = firstPageResponse.urls[0];
+      const firstImageResponse = await fetch(firstImageUrl);
+      const firstImageBlob = await firstImageResponse.blob();
+      const firstImageFile = new File([firstImageBlob], `page-1.jpg`, { type: 'image/jpeg' });
+      
+      const firstPath = `magazines/${catalogId}/${magazineName}_page_01.jpg`;
+      const firstFirebaseUrl = await this.storageService.uploadFile(firstImageFile, firstPath);
+      downloadUrls.push(firstFirebaseUrl);
+      console.log(`Page 1 uploaded successfully`);
+
+      // Step 3: Process remaining pages one by one
+      currentPage = 1;
+      while (hasMorePages) {
+        const pageNumber = currentPage + 1;
+        this.uploadProgress = `Processing page ${pageNumber}...`;
+
+        try {
+          // Convert single page
+          const pageResponse = await this.pdfCoService.convertPdfToImages(pdfUrl, `${currentPage}`);
+
+          if (pageResponse.error || !pageResponse.urls || pageResponse.urls.length === 0) {
+            // No more pages
+            hasMorePages = false;
+            break;
+          }
+
+          // Download image from PDF.co
+          const imageUrl = pageResponse.urls[0];
+          const imageResponse = await fetch(imageUrl);
+          const imageBlob = await imageResponse.blob();
+          const imageFile = new File([imageBlob], `page-${pageNumber}.jpg`, { type: 'image/jpeg' });
+
+          // Upload to Firebase Storage
+          const path = `magazines/${catalogId}/${magazineName}_page_${String(pageNumber).padStart(2, '0')}.jpg`;
+          const firebaseUrl = await this.storageService.uploadFile(imageFile, path);
+          downloadUrls.push(firebaseUrl);
+
+          console.log(`Page ${pageNumber} uploaded successfully`);
+          currentPage++;
+
+        } catch (error) {
+          // Likely reached end of document
+          console.log(`Finished processing. Total pages: ${downloadUrls.length}`);
+          hasMorePages = false;
+        }
+      }
+
+      return downloadUrls;
+
+    } catch (error) {
+      console.error('Error processing PDF page by page:', error);
+      throw error;
+    }
   }
 
   formatFileSize(bytes: number): string {
     if (bytes === 0) return '0 Bytes';
-    
+
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
+
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 

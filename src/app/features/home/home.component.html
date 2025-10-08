@@ -44,6 +44,13 @@
             </button>
           </div>
 
+          @if(isUploading && uploadProgress){
+          <div class="progress-message">
+            <div class="spinner"></div>
+            <span>{{ uploadProgress }}</span>
+          </div>
+          }
+
           @if(uploadSuccess){
           <div class="success-message">
             ✅ PDF uploaded successfully!
