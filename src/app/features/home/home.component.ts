@@ -11,6 +11,7 @@ import { PdfCoService } from '../../core/services/pdf-co.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  // PDF Upload properties
   selectedFile: File | null = null;
   isDragOver = false;
   isUploading = false;
@@ -18,10 +19,18 @@ export class HomeComponent implements OnInit {
   uploadSuccess = false;
   uploadProgress: string = '';
 
+  // JSON Upload properties
+  selectedJsonFile: File | null = null;
+  isJsonDragOver = false;
+  isJsonUploading = false;
+  jsonUploadError: string | null = null;
+  jsonUploadSuccess = false;
+  jsonData: any = null;
+
   constructor(
     private storageService: StorageService,
     private pdfCoService: PdfCoService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Componente inicializado
@@ -92,7 +101,7 @@ export class HomeComponent implements OnInit {
     try {
       // Save reference to file name before processing
       const originalFileName = this.selectedFile.name;
-      
+
       // Create unique identifier for this catalog
       const catalogId = `catalog_${Date.now()}`;
       const magazineName = originalFileName.replace('.pdf', '');
@@ -147,7 +156,7 @@ export class HomeComponent implements OnInit {
       // Step 2: Get total page count by converting first page
       this.uploadProgress = 'Analyzing PDF...';
       const firstPageResponse = await this.pdfCoService.convertPdfToImages(pdfUrl, '0');
-      
+
       if (firstPageResponse.error || !firstPageResponse.urls) {
         throw new Error(firstPageResponse.message || 'Failed to analyze PDF');
       }
@@ -164,7 +173,7 @@ export class HomeComponent implements OnInit {
       const firstImageResponse = await fetch(firstImageUrl);
       const firstImageBlob = await firstImageResponse.blob();
       const firstImageFile = new File([firstImageBlob], `page-1.jpg`, { type: 'image/jpeg' });
-      
+
       const firstPath = `magazines/${catalogId}/${magazineName}_page_01.jpg`;
       const firstFirebaseUrl = await this.storageService.uploadFile(firstImageFile, firstPath);
       downloadUrls.push(firstFirebaseUrl);
@@ -228,5 +237,228 @@ export class HomeComponent implements OnInit {
   private clearMessages(): void {
     this.uploadError = null;
     this.uploadSuccess = false;
+  }
+
+  // JSON Upload Methods
+  onJsonDragOver(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isJsonDragOver = true;
+  }
+
+  onJsonDragLeave(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isJsonDragOver = false;
+  }
+
+  onJsonDrop(event: DragEvent): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isJsonDragOver = false;
+
+    const files = event.dataTransfer?.files;
+    if (files && files.length > 0) {
+      this.handleJsonFileSelection(files[0]);
+    }
+  }
+
+  onJsonFileSelected(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    if (target.files && target.files.length > 0) {
+      this.handleJsonFileSelection(target.files[0]);
+    }
+  }
+
+  private handleJsonFileSelection(file: File): void {
+    this.clearJsonMessages();
+
+    // Validate file type
+    if (file.type !== 'application/json' && !file.name.endsWith('.json')) {
+      this.jsonUploadError = 'Please select a valid JSON file.';
+      return;
+    }
+
+    // Validate file size (10MB limit for JSON)
+    const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+    if (file.size > maxSize) {
+      this.jsonUploadError = 'File size must be less than 10MB.';
+      return;
+    }
+
+    this.selectedJsonFile = file;
+    this.validateJsonContent(file);
+  }
+
+  private async validateJsonContent(file: File): Promise<void> {
+    try {
+      const text = await file.text();
+      const json = JSON.parse(text);
+
+      // Validate that the JSON contains product data
+      const hasValidStructure = this.validateJsonStructure(json);
+
+      if (!hasValidStructure) {
+        this.jsonUploadError = 'JSON file does not contain valid product data. Expected structure: {enrichments: [...]} or {products: [...]} or array of products';
+        this.selectedJsonFile = null;
+        return;
+      }
+
+      this.jsonData = json;
+      console.log('Valid JSON file loaded with product data:', json);
+    } catch (error) {
+      this.jsonUploadError = 'Invalid JSON format. Please check your file.';
+      this.selectedJsonFile = null;
+    }
+  }
+
+  /**
+   * Validate that the JSON has a structure that contains product data
+   */
+  private validateJsonStructure(json: any): boolean {
+    if (!json || typeof json !== 'object') {
+      return false;
+    }
+
+    // Check for different possible structures
+    if (json.enrichments && Array.isArray(json.enrichments)) {
+      return json.enrichments.some((item: any) =>
+        item && (item.productId || item.id) && (item.name || item.title || item.productName)
+      );
+    }
+
+    if (json.products && Array.isArray(json.products)) {
+      return json.products.some((item: any) =>
+        item && (item.productId || item.id) && (item.name || item.title || item.productName)
+      );
+    }
+
+    if (Array.isArray(json)) {
+      return json.some((item: any) =>
+        item && (item.productId || item.id) && (item.name || item.title || item.productName)
+      );
+    }
+
+    return false;
+  }
+
+  removeJsonFile(): void {
+    this.selectedJsonFile = null;
+    this.jsonData = null;
+    this.clearJsonMessages();
+  }
+
+  async uploadJsonFile(): Promise<void> {
+    if (!this.selectedJsonFile || !this.jsonData) {
+      return;
+    }
+
+    this.isJsonUploading = true;
+    this.clearJsonMessages();
+
+    try {
+
+      // Process the JSON data before uploading
+      const processedData = this.processProductData(this.jsonData);
+
+      if (!processedData || processedData.length === 0) {
+        throw new Error('No valid products found in the JSON file');
+      }
+
+      this.isJsonUploading = false;
+      this.jsonUploadSuccess = true;
+      this.selectedJsonFile = null;
+      this.jsonData = null;
+
+      // Clear success message after 5 seconds
+      setTimeout(() => {
+        this.jsonUploadSuccess = false;
+      }, 5000);
+
+    } catch (error) {
+      console.error('Error uploading JSON file:', error);
+      this.isJsonUploading = false;
+      this.jsonUploadError = error instanceof Error ? error.message : 'Error uploading file. Please try again.';
+    }
+  }
+
+  /**
+   * Process the JSON data to extract and format product information
+   */
+  private processProductData(jsonData: any): any[] {
+    try {
+      // Check if the data has the expected structure
+      if (!jsonData || typeof jsonData !== 'object') {
+        throw new Error('Invalid JSON structure');
+      }
+
+      // Handle different possible data structures
+      let enrichments: any[] = [];
+
+      if (jsonData.enrichments && Array.isArray(jsonData.enrichments)) {
+        enrichments = jsonData.enrichments;
+      } else if (Array.isArray(jsonData)) {
+        enrichments = jsonData;
+      } else if (jsonData.products && Array.isArray(jsonData.products)) {
+        enrichments = jsonData.products;
+      } else {
+        throw new Error('No valid product data found. Expected structure: {enrichments: [...]} or {products: [...]} or array of products');
+      }
+
+      // Filter and map products with validation
+      const processedProducts = enrichments
+        .filter((item: any) => {
+          // Validate required fields
+          return item &&
+            (item.productId || item.id) &&
+            (item.name || item.title || item.productName);
+        })
+        .map((item: any, index: number) => {
+          // Normalize the data structure
+          return {
+            id: item.productId || item.id || `product_${index}`,
+            name: item.name || 'Unnamed Product',
+            price: this.parsePrice(item.price),
+            pageIndex: item.pageIndex || index + 1,
+            pageName: item.pageName || `Page ${item.pageIndex || index + 1}`,
+            // Keep original data for reference
+            originalData: item
+          };
+        });
+
+      console.log(`Processed ${processedProducts.length} products from ${enrichments.length} items`);
+      return processedProducts;
+
+    } catch (error) {
+      console.error('Error processing product data:', error);
+      throw new Error(`Failed to process product data: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  }
+
+  /**
+   * Parse price from various formats
+   */
+  private parsePrice(price: any): number | null {
+    if (price === null || price === undefined || price === '') {
+      return null;
+    }
+
+    if (typeof price === 'number') {
+      return price;
+    }
+
+    if (typeof price === 'string') {
+      // Remove currency symbols and parse
+      const cleanPrice = price.replace(/[^\d.,]/g, '');
+      const parsed = parseFloat(cleanPrice.replace(',', '.'));
+      return isNaN(parsed) ? null : parsed;
+    }
+
+    return null;
+  }
+
+  private clearJsonMessages(): void {
+    this.jsonUploadError = null;
+    this.jsonUploadSuccess = false;
   }
 }

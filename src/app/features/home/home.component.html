@@ -58,5 +58,61 @@
           }
         </div>
       </div>
+
+      <!-- JSON Upload Section -->
+      <div class="upload-section">
+        <div class="upload-card">
+          <h3>Upload Product Catalog (JSON)</h3>
+          <p>Select a JSON file with product information for the catalog</p>
+
+          <div class="upload-area" [class.drag-over]="isJsonDragOver" (dragover)="onJsonDragOver($event)"
+            (dragleave)="onJsonDragLeave($event)" (drop)="onJsonDrop($event)" (click)="jsonFileInput.click()">
+            <div class="upload-content">
+              <div class="upload-icon">📋</div>
+              <p class="upload-text">
+                <strong>Click to browse</strong> or drag and drop your JSON file here
+              </p>
+              <p class="upload-hint">Maximum file size: 10MB</p>
+            </div>
+          </div>
+
+          <input #jsonFileInput type="file" accept=".json,application/json" (change)="onJsonFileSelected($event)" style="display: none;">
+          
+          @if(selectedJsonFile){
+          <div class="file-info">
+            <div class="file-details">
+              <span class="file-name">{{ selectedJsonFile.name }}</span>
+              <span class="file-size">{{ formatFileSize(selectedJsonFile.size) }}</span>
+              @if(jsonData){
+              <span class="file-size">✓ Valid JSON with product data</span>
+              }
+            </div>
+            <button class="remove-file-btn" (click)="removeJsonFile()">×</button>
+          </div>
+          }
+          
+          @if(jsonUploadError){
+          <div class="error-message">
+            {{ jsonUploadError }}
+          </div>
+          }
+          
+          <div class="upload-actions">
+            <button class="upload-btn" [disabled]="!selectedJsonFile || !jsonData || isJsonUploading" (click)="uploadJsonFile()">
+              @if(!isJsonUploading){
+              <span>Upload JSON</span>
+              }@else{
+              <span>Uploading...</span>
+              }
+            </button>
+          </div>
+
+          @if(jsonUploadSuccess){
+          <div class="success-message">
+            ✅ JSON catalog uploaded successfully!
+          </div>
+          }
+        </div>
+      </div>
   </div>
 </main>
