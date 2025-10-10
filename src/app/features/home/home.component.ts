@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StorageService } from '../../core/services/storage.service';
 import { PdfCoService } from '../../core/services/pdf-co.service';
+import { FirestoreService, Product } from '../../core/services/firestore.service';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,8 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private storageService: StorageService,
-    private pdfCoService: PdfCoService
+    private pdfCoService: PdfCoService,
+    private firestoreService: FirestoreService
   ) { }
 
   ngOnInit(): void {
@@ -357,13 +359,20 @@ export class HomeComponent implements OnInit {
     this.clearJsonMessages();
 
     try {
-
       // Process the JSON data before uploading
       const processedData = this.processProductData(this.jsonData);
 
       if (!processedData || processedData.length === 0) {
         throw new Error('No valid products found in the JSON file');
       }
+
+      // Save products to Firestore using the new structure
+      await this.firestoreService.saveProductsToCatalog(processedData);
+
+      console.log('Products saved to Firestore:', {
+        productCount: processedData.length,
+        products: processedData
+      });
 
       this.isJsonUploading = false;
       this.jsonUploadSuccess = true;
@@ -421,6 +430,7 @@ export class HomeComponent implements OnInit {
             price: this.parsePrice(item.price),
             pageIndex: item.pageIndex || index + 1,
             pageName: item.pageName || `Page ${item.pageIndex || index + 1}`,
+            desc: item.desc || '',
             // Keep original data for reference
             originalData: item
           };
