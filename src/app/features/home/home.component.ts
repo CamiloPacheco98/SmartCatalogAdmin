@@ -370,7 +370,7 @@ export class HomeComponent implements OnInit {
       }
 
       // Create a unique catalog ID for this JSON upload
-      const catalogId = `json_catalog_${Date.now()}`;
+      const catalogId = `catalog_${Date.now()}`;
       
       // Add catalogId to each product
       const productsWithCatalogId = processedData.map(product => ({
