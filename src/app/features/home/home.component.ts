@@ -106,21 +106,24 @@ export class HomeComponent implements OnInit {
 
       // Create unique identifier for this catalog
       const catalogId = `catalog_${Date.now()}`;
-      const magazineName = originalFileName.replace('.pdf', '');
+      const catalogName = originalFileName.replace('.pdf', '');
 
       // Process and upload page by page for better performance and progress tracking
       const downloadUrls = await this.processAndUploadPageByPage(
         this.selectedFile,
         catalogId,
-        magazineName
+        catalogName
       );
 
-      console.log('Uploaded magazine pages:', {
+      console.log('Uploaded catalog pages:', {
         catalogId,
-        magazineName,
+        catalogName,
         totalPages: downloadUrls.length,
         pages: downloadUrls
       });
+
+      // Save catalog metadata with download URLs to Firestore
+      await this.firestoreService.saveCatalogMetadata(catalogId, catalogName, downloadUrls);
 
       this.isUploading = false;
       this.uploadSuccess = true;
@@ -146,7 +149,7 @@ export class HomeComponent implements OnInit {
   private async processAndUploadPageByPage(
     pdfFile: File,
     catalogId: string,
-    magazineName: string
+    catalogName: string
   ): Promise<string[]> {
     try {
       // Step 1: Upload PDF to PDF.co
@@ -176,7 +179,7 @@ export class HomeComponent implements OnInit {
       const firstImageBlob = await firstImageResponse.blob();
       const firstImageFile = new File([firstImageBlob], `page-1.jpg`, { type: 'image/jpeg' });
 
-      const firstPath = `magazines/${catalogId}/${magazineName}_page_01.jpg`;
+      const firstPath = `catalogs/${catalogId}/${catalogName}_page_01.jpg`;
       const firstFirebaseUrl = await this.storageService.uploadFile(firstImageFile, firstPath);
       downloadUrls.push(firstFirebaseUrl);
       console.log(`Page 1 uploaded successfully`);
@@ -204,8 +207,8 @@ export class HomeComponent implements OnInit {
           const imageFile = new File([imageBlob], `page-${pageNumber}.jpg`, { type: 'image/jpeg' });
 
           // Upload to Firebase Storage
-          const path = `magazines/${catalogId}/${magazineName}_page_${String(pageNumber).padStart(2, '0')}.jpg`;
-          const firebaseUrl = await this.storageService.uploadFile(imageFile, path);
+          const path = `catalogs/${catalogId}/${catalogName}_page_${String(pageNumber).padStart(2, '0')}.jpg`;
+            const firebaseUrl = await this.storageService.uploadFile(imageFile, path);
           downloadUrls.push(firebaseUrl);
 
           console.log(`Page ${pageNumber} uploaded successfully`);
@@ -366,8 +369,17 @@ export class HomeComponent implements OnInit {
         throw new Error('No valid products found in the JSON file');
       }
 
+      // Create a unique catalog ID for this JSON upload
+      const catalogId = `json_catalog_${Date.now()}`;
+      
+      // Add catalogId to each product
+      const productsWithCatalogId = processedData.map(product => ({
+        ...product,
+        catalogId
+      }));
+
       // Save products to Firestore using the new structure
-      await this.firestoreService.saveProductsToCatalog(processedData);
+      await this.firestoreService.saveProductsToCatalog(catalogId, productsWithCatalogId);
 
       console.log('Products saved to Firestore:', {
         productCount: processedData.length,
@@ -426,6 +438,7 @@ export class HomeComponent implements OnInit {
           // Normalize the data structure
           return {
             id: item.productId || item.id || `product_${index}`,
+            catalogId: '', // Will be set when saving to Firestore
             name: item.name || 'Unnamed Product',
             price: this.parsePrice(item.price),
             pageIndex: item.pageIndex || index + 1,
