@@ -339,3 +339,48 @@
     transform: translateY(0);
   }
 }
+
+/* Sign-in Form Styles */
+.signin-form {
+  margin-top: var(--spacing-lg);
+}
+
+.form-group {
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-color);
+  font-size: 0.95rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: var(--white);
+  color: var(--text-color);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(232, 119, 34, 0.1);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.form-input:disabled {
+  background-color: var(--background-color);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}

@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  sendSignInLinkToEmail,
   User,
   Auth
 } from 'firebase/auth';
@@ -59,6 +60,29 @@ export class AuthService {
    */
   isAuthenticated(): boolean {
     return this.getCurrentUser() !== null;
+  }
+
+  /**
+   * Send sign-in link to email
+   */
+  async sendSignInLinkToEmail(email: string, adminUid: string): Promise<void> {
+    try {
+      //TODO: change the url to the correct url
+      const actionCodeSettings = {
+        // URL you want to redirect back to. The domain (www.example.com) for this
+        // URL must be whitelisted in the Firebase Console.
+        url: `${window.location.origin}/auth/signin?adminUid=${encodeURIComponent(adminUid)}`,
+        // This must be true.
+        handleCodeInApp: true,
+      };
+
+      await sendSignInLinkToEmail(this.auth, email, actionCodeSettings);
+      
+      
+    } catch (error: any) {
+      console.error('Error sending sign-in link:', error);
+      throw this.handleAuthError(error);
+    }
   }
 
   /**

@@ -1,6 +1,60 @@
 <!-- Main Content -->
 <main class="home-content">
   <div class="content-wrapper">
+       <!-- Sign-in Link Section -->
+       <div class="upload-section">
+        <div class="upload-card">
+          <h3>Send Sign-in Link</h3>
+          <p>Send a secure sign-in link to another user</p>
+
+          <div class="signin-form">
+            <div class="form-group">
+              <label for="userEmail">User Email</label>
+              <input 
+                type="email" 
+                id="userEmail" 
+                [(ngModel)]="signinEmail" 
+                placeholder="Enter user's email address"
+                class="form-input"
+              >
+            </div>
+
+            @if(signinError){
+            <div class="error-message">
+              {{ signinError }}
+            </div>
+            }
+
+            @if(signinSuccess){
+            <div class="success-message">
+              ✅ Sign-in link sent successfully!
+            </div>
+            }
+
+            <div class="upload-actions">
+              <button 
+                class="upload-btn" 
+                [disabled]="!signinEmail || isSendingLink" 
+                (click)="sendSigninLink()"
+              >
+                @if(!isSendingLink){
+                <span>Send Sign-in Link</span>
+                }@else{
+                <span>Sending...</span>
+                }
+              </button>
+            </div>
+
+            @if(isSendingLink){
+            <div class="progress-message">
+              <div class="spinner"></div>
+              <span>Generating and sending sign-in link...</span>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
     <!-- PDF Upload Section -->
       <div class="upload-section">
         <div class="upload-card">
