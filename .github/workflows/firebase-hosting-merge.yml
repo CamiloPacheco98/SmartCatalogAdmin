@@ -15,7 +15,7 @@ jobs:
       - name: Create environment files
         run: |
           mkdir -p src/environments
-          echo "export const environment = { firebase: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SMARTCATALOG_32439 }} pdfCo: { apiKey: '${{ secrets.PDF_API_KEY }}' } };" > src/environments/environment.ts
+          echo "export const environment = { firebase: ${{ secrets.FIREBASE_ENV }}, pdfCo: { apiKey: '${{ secrets.PDF_API_KEY }}' } };" > src/environments/environment.ts
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
