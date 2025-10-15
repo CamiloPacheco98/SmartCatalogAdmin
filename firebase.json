@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/smartcatalog/browser/",
+    "public": "dist/smart_catalog_admin",
     "ignore": [
       "firebase.json",
       "**/.*",
