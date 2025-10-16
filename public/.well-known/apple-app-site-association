@@ -1,0 +1,22 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "TEMP123456.com.pcreat.smart_catalog"
+        ],
+        "components": [
+          {
+            "/": "/__/auth/links",
+            "comment": "Matches Firebase Auth links path"
+          }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "TEMP123456.com.pcreat.smart_catalog"
+    ]
+  }
+}
