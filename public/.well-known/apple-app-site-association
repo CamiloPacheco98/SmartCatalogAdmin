@@ -2,9 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": [
-          "J4Y2XYQJ58.com.pcreat.smart_catalog"
-        ],
+        "appIDs": ["J4Y2XYQJ58.com.pcreat.smartCatalog"],
         "components": [
           {
             "/": "/__/auth/links",
@@ -15,8 +13,6 @@
     ]
   },
   "webcredentials": {
-    "apps": [
-      "J4Y2XYQJ58.com.pcreat.smart_catalog"
-    ]
+    "apps": ["J4Y2XYQJ58.com.pcreat.smartCatalog"]
   }
 }
