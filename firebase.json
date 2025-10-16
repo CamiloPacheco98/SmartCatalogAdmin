@@ -1,6 +1,18 @@
 {
   "hosting": {
     "public": "dist/smart_catalog_admin/browser",
+    "headers": [
+      {
+        "source": "/.well-known/apple-app-site-association",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
+      }
+    ],
+    "appAssociation": "NONE",
     "ignore": [
       "firebase.json",
       "**/.*",
