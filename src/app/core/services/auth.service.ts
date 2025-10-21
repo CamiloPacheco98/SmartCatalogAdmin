@@ -8,6 +8,7 @@ import {
   Auth
 } from 'firebase/auth';
 import { FIREBASE_AUTH } from './firebase.providers';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -71,9 +72,17 @@ export class AuthService {
       const actionCodeSettings = {
         // URL you want to redirect back to. The domain (www.example.com) for this
         // URL must be whitelisted in the Firebase Console.
-        url: `${window.location.origin}/auth/signin?adminUid=${encodeURIComponent(adminUid)}`,
+        url: `${environment.webAppUrl}/auth/finish-signin?adminUid=${encodeURIComponent(adminUid)}&email=${encodeURIComponent(email)}`,
         // This must be true.
         handleCodeInApp: true,
+        iOS: {
+          bundleId: environment.iosBundleId,
+        },
+        android: {
+          packageName: environment.androidPackageName,
+          installApp: true,
+          minimumVersion: '1',
+        },
       };
 
       await sendSignInLinkToEmail(this.auth, email, actionCodeSettings);
