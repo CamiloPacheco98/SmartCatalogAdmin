@@ -1,0 +1,137 @@
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: var(--white);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: width 0.3s ease;
+  border-right: 1px solid var(--border-color);
+}
+
+.sidebar-logo-section {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.sidebar-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.sidebar-title {
+  font-size: 1.3rem;
+  font-weight: var(--font-bold);
+  margin: 0;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+  color: var(--white);
+}
+
+
+.sidebar-header {
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.sidebar-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: var(--font-semibold);
+  color: var(--white);
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--spacing-md) 0;
+}
+
+.nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-md) var(--spacing-lg);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+  position: relative;
+  gap: var(--spacing-sm);
+  text-decoration: none;
+}
+
+.nav-item.active {
+  background-color: var(--primary-color);
+  border-left-color: var(--primary-dark-color);
+  color: var(--white);
+}
+
+
+.nav-item.active .nav-icon,
+.nav-item.active:hover .nav-icon {
+  color: var(--white);
+}
+
+.nav-item.active .nav-label,
+.nav-item.active:hover .nav-label {
+  color: var(--white);
+}
+
+.nav-icon {
+  margin-right: var(--spacing-md);
+  font-size: 20px;
+  color: var(--medium-gray);
+  transition: color 0.3s ease;
+  min-width: 20px;
+  text-align: center;
+}
+
+.nav-label {
+  font-size: 14px;
+  font-weight: var(--font-medium);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+
+.nav-item:hover .nav-icon {
+  color: var(--primary-color);
+}
+
+.nav-item:hover .nav-label {
+  color: var(--primary-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .nav-label {
+    font-size: 13px;
+  }
+
+  .nav-icon {
+    font-size: 18px;
+  }
+}

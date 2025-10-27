@@ -1,0 +1,20 @@
+<!-- Sidebar wrapper -->
+<aside class="sidebar">
+    <!-- Header section -->
+    <div class="sidebar-header">
+        <div class="sidebar-logo-section">
+            <img src="logo_white.png" alt="Smart Catalog Admin Logo" class="sidebar-logo" />
+            <h1 class="sidebar-title">Smart Catalog</h1>
+        </div>
+    </div>
+
+    <!-- Navigation section -->
+    <nav class="nav-links">
+        @for (menuItem of menuItems; track menuItem.route) {
+        <a class="nav-item" role="button" (click)="navigateTo(menuItem.route)" [ngClass]="{'active': menuItem.active}">
+            <span class="icon">{{menuItem.icon}}</span>
+            <span class="nav-label">{{menuItem.label}}</span>
+        </a>
+        }
+    </nav>
+</aside>

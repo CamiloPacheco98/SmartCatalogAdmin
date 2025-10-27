@@ -6,54 +6,6 @@
   font-family: var(--font-family);
 }
 
-.app-header {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
-  color: var(--white);
-  padding: var(--spacing-md) 0;
-  box-shadow: var(--shadow-lg);
-}
-
-.header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-xl);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.app-logo {
-  height: 40px;
-  width: auto;
-  object-fit: contain;
-  transition: transform 0.2s ease;
-
-}
-
-.app-logo:hover {
-  transform: scale(1.05);
-}
-
-.app-title {
-  font-size: 1.75rem;
-  font-weight: var(--font-bold);
-  margin: 0;
-  text-transform: capitalize;
-  letter-spacing: 0.5px;
-  color: var(--white);
-}
-
-.nav-menu {
-  display: flex;
-  gap: var(--spacing-xl);
-  align-items: center;
-}
 
 .main-content {
   flex: 1;
@@ -78,33 +30,4 @@
   font-size: 0.875rem;
   font-weight: var(--font-regular);
   color: var(--white);
-}
-
-@media (max-width: 768px) {
-  .header-content {
-    padding: 0 var(--spacing-md);
-    flex-direction: column;
-    gap: var(--spacing-md);
-  }
-  
-  .logo-section {
-    gap: var(--spacing-sm);
-  }
-  
-  .app-logo {
-    height: 32px;
-  }
-  
-  .app-title {
-    font-size: 1.5rem;
-    font-weight: var(--font-bold);
-  }
-  
-  .main-content {
-    padding: var(--spacing-md);
-  }
-  
-  .nav-menu {
-    gap: var(--spacing-md);
-  }
 }

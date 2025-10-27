@@ -46,7 +46,7 @@ export class LoginComponent implements OnInit {
         const userAuth = await this.authService.login(email, password);
         const userInfo = await this.firestoreService.getUserInfo(userAuth.uid);
         if (userInfo.isAdmin()) {
-          this.router.navigate(["/home"]);
+          this.router.navigate(["/dashboard"]);
         } else {
           this.errorMessage = "No tienes permisos para acceder a esta aplicación";
         }

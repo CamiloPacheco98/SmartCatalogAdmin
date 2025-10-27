@@ -1,13 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { StorageService } from "../../core/services/storage.service";
-import { PdfCoService } from "../../core/services/pdf-co.service";
+import { StorageService } from "../../../../core/services/storage.service";
+import { PdfCoService } from "../../../../core/services/pdf-co.service";
 import {
   FirestoreService,
   Product,
-} from "../../core/services/firestore.service";
-import { AuthService } from "../../core/services/auth.service";
+} from "../../../../core/services/firestore.service";
+import { AuthService } from "../../../../core/services/auth.service";
 
 @Component({
   selector: "app-home",
@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
     private pdfCoService: PdfCoService,
     private firestoreService: FirestoreService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Componente inicializado
@@ -512,8 +512,7 @@ export class HomeComponent implements OnInit {
     } catch (error) {
       console.error("Error processing product data:", error);
       throw new Error(
-        `Failed to process product data: ${
-          error instanceof Error ? error.message : "Unknown error"
+        `Failed to process product data: ${error instanceof Error ? error.message : "Unknown error"
         }`
       );
     }

@@ -1,39 +1,4 @@
-.home-container {
-  min-height: 100vh;
-  background-color: var(--background-color);
-}
-
-/* App Bar Styles */
-.app-bar {
-  background-color: var(--primary-color);
-  color: var(--white);
-  box-shadow: var(--shadow-md);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.app-bar-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: var(--spacing-md) var(--spacing-lg);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.app-bar-title {
-  font-size: 1.5rem;
-  font-weight: var(--font-semibold);
-  color: var(--white);
-  margin: 0;
-}
-
 /* Main Content Styles */
-.home-content {
-  padding: var(--spacing-xl) var(--spacing-lg);
-}
-
 .content-wrapper {
   max-width: 1200px;
   margin: 0 auto;
@@ -67,23 +32,23 @@
   .app-bar-content {
     padding: var(--spacing-md);
   }
-  
+
   .app-bar-title {
     font-size: 1.25rem;
   }
-  
+
   .home-content {
     padding: var(--spacing-lg) var(--spacing-md);
   }
-  
+
   .welcome-card {
     padding: var(--spacing-lg);
   }
-  
+
   .welcome-card h2 {
     font-size: 1.5rem;
   }
-  
+
   .welcome-card p {
     font-size: 1rem;
   }
@@ -109,7 +74,7 @@
   margin-bottom: var(--spacing-sm);
 }
 
-.upload-card > p {
+.upload-card>p {
   color: var(--text-color);
   font-size: 1rem;
   margin-bottom: var(--spacing-lg);
@@ -264,29 +229,29 @@
   .upload-card {
     padding: var(--spacing-lg);
   }
-  
+
   .upload-card h3 {
     font-size: 1.25rem;
   }
-  
+
   .upload-area {
     padding: var(--spacing-lg);
   }
-  
+
   .upload-icon {
     font-size: 2.5rem;
   }
-  
+
   .upload-text {
     font-size: 1rem;
   }
-  
+
   .file-info {
     flex-direction: column;
     align-items: flex-start;
     gap: var(--spacing-sm);
   }
-  
+
   .remove-file-btn {
     align-self: flex-end;
   }
@@ -334,6 +299,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
