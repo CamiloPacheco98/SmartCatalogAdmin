@@ -28,8 +28,8 @@
     <div *ngFor="let user of users" class="user-card">
       <!-- User Image -->
       <div class="user-image-container">
-        <img [src]="user.imagePath" class="user-image"
-          (error)="$event.target.src='assets/default-avatar.svg'" />
+        <img [src]=" user.imagePath || 'default-avatar.svg'" class="user-image"
+          (error)="$event.target.src='default-avatar.svg'" />
       </div>
 
       <!-- User Info -->
