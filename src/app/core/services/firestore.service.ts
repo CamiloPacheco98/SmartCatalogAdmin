@@ -7,6 +7,9 @@ import {
   doc,
   setDoc,
   getDoc,
+  query,
+  where,
+  orderBy,
 } from "firebase/firestore";
 import { FIREBASE_FIRESTORE } from "./firebase.providers";
 import { User, UserModel } from "../models/user.model";
@@ -28,7 +31,7 @@ export interface Product {
   providedIn: "root",
 })
 export class FirestoreService {
-  constructor(@Inject(FIREBASE_FIRESTORE) private firestore: Firestore) {}
+  constructor(@Inject(FIREBASE_FIRESTORE) private firestore: Firestore) { }
 
   /**
    * Save products to catalog collection organized by catalogId
@@ -178,23 +181,27 @@ export class FirestoreService {
         throw new Error("User not found");
       }
 
-      const userData = userDoc.data();
-      return new UserModel({
-        cc: userData["cc"],
-        created_at: userData["created_at"]?.toDate() || new Date(),
-        email: userData["email"],
-        image: userData["image"],
-        is_active: userData["is_active"],
-        last_name: userData["last_name"],
-        name: userData["name"],
-        phone: userData["phone"],
-        type: userData["type"],
-        uid: userData["uid"] || uid,
-        updated_at: userData["updated_at"]?.toDate() || new Date(),
-      });
+      const userData = userDoc.data() as User;
+      return new UserModel(userData);
     } catch (error) {
       console.error("Error getting user info:", error);
       throw new Error("Error al obtener la información del usuario");
+    }
+  }
+
+  async getAllUsers(adminUid: string): Promise<User[]> {
+    try {
+      const usersCollection = query(collection(this.firestore, "users"), where("adminUid", "==", adminUid), orderBy("updatedAt", "desc"));
+      const querySnapshot = await getDocs(usersCollection);
+      const users: User[] = [];
+      querySnapshot.forEach((doc) => {
+        const userData = doc.data();
+        users.push(new UserModel(userData));
+      });
+      return users;
+    } catch (error) {
+      console.error("Error getting all users:", error);
+      throw new Error("Error al obtener la lista de usuarios");
     }
   }
 }

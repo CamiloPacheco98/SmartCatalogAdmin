@@ -1,0 +1,98 @@
+<div class="users-container">
+  <!-- Header -->
+  <div class="users-header">
+    <h1>Gestión de Usuarios</h1>
+    <button class="refresh-btn" (click)="loadUsers()" [disabled]="loading">
+      <i class="refresh-icon">🔄</i>
+      Actualizar
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Cargando usuarios...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-container">
+    <div class="error-message">
+      <i class="error-icon">⚠️</i>
+      {{ error }}
+    </div>
+    <button class="retry-btn" (click)="loadUsers()">Reintentar</button>
+  </div>
+
+  <!-- Users Grid -->
+  <div *ngIf="!loading && !error" class="users-grid">
+    <div *ngFor="let user of users" class="user-card">
+      <!-- User Image -->
+      <div class="user-image-container">
+        <img [src]="user.imagePath" class="user-image"
+          (error)="$event.target.src='assets/default-avatar.svg'" />
+      </div>
+
+      <!-- User Info -->
+      <div class="user-info">
+        <h3 class="user-name">{{ getFullName(user) }}</h3>
+        <p class="user-email">{{ user.email }}</p>
+        <p class="user-document">Documento: {{ user.documentNumber }}</p>
+        <p class="user-created">
+          <i class="date-icon">📅</i>
+          Creado: {{ formatDate(user.createdAt) }}
+        </p>
+      </div>
+
+      <!-- Verification Status -->
+      <div class="verification-section">
+        <div class="status-container">
+          <span class="status-label">Estado:</span>
+          <span class="status-badge" [class]="getStatusClass(user.verified)">
+            {{ getStatusText(user.verified) }}
+          </span>
+        </div>
+
+        <!-- Edit Mode -->
+        <div *ngIf="editingUser === user.id" class="edit-mode">
+          <div class="status-selector">
+            <label class="radio-option">
+              <input type="radio" name="status-{{ user.id }}" [value]="true"
+                [(ngModel)]="tempVerificationStatus[user.id]" />
+              <span class="radio-label verified">Verificado</span>
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="status-{{ user.id }}" [value]="false"
+                [(ngModel)]="tempVerificationStatus[user.id]" />
+              <span class="radio-label unverified">No verificado</span>
+            </label>
+          </div>
+          <div class="edit-actions">
+            <button class="btn btn-success" (click)="updateUserStatus(user)" [disabled]="loading">
+              <i class="btn-icon">✓</i>
+              Actualizar
+            </button>
+            <button class="btn btn-secondary" (click)="cancelEditing(user)">
+              <i class="btn-icon">✕</i>
+              Cancelar
+            </button>
+          </div>
+        </div>
+
+        <!-- View Mode -->
+        <div *ngIf="editingUser !== user.id" class="view-mode">
+          <button class="btn btn-primary edit-btn" (click)="startEditing(user)">
+            <i class="btn-icon">✏️</i>
+            Editar Estado
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && users.length === 0" class="empty-state">
+    <div class="empty-icon">👥</div>
+    <h3>No hay usuarios registrados</h3>
+    <p>Los usuarios aparecerán aquí una vez que se registren en la plataforma.</p>
+  </div>
+</div>

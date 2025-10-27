@@ -56,6 +56,10 @@ export class AuthService {
     return this.currentUser;
   }
 
+  getCurrentUid(): string | null {
+    return this.currentUser?.uid || null;
+  }
+
   /**
    * Check if user is authenticated
    */
@@ -86,8 +90,8 @@ export class AuthService {
       };
 
       await sendSignInLinkToEmail(this.auth, email, actionCodeSettings);
-      
-      
+
+
     } catch (error: any) {
       console.error('Error sending sign-in link:', error);
       throw this.handleAuthError(error);

@@ -6,7 +6,7 @@ import { FIREBASE_STORAGE } from './firebase.providers';
   providedIn: 'root'
 })
 export class StorageService {
-  constructor(@Inject(FIREBASE_STORAGE) private storage: FirebaseStorage) {}
+  constructor(@Inject(FIREBASE_STORAGE) private storage: FirebaseStorage) { }
 
   /**
    * Upload a file to Firebase Storage
@@ -32,7 +32,13 @@ export class StorageService {
       const path = `${basePath}/${file.name}`;
       return this.uploadFile(file, path);
     });
-    
+
     return Promise.all(uploadPromises);
+  }
+
+  async downloadFile(path: string): Promise<string> {
+    const storageRef = ref(this.storage, path);
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
   }
 }

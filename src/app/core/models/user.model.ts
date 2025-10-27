@@ -1,16 +1,16 @@
 export interface User {
-  cc: string;
-  created_at: Date;
+  id: string;
+  adminUid: string;
+  createdAt: Date;
+  documentNumber: string;
   email: string;
-  image: string;
-  is_active: boolean;
-  last_name: string;
+  imagePath: string;
+  lastName: string;
   name: string;
-  phone: string;
-  type: string;
-  uid: string;
-  updated_at: Date;
-  
+  updatedAt: Date;
+  verified: boolean;
+  type: 'admin' | 'user';
+
   /**
    * Check if the user is an admin
    * @returns boolean indicating if user is admin
@@ -19,36 +19,32 @@ export interface User {
 }
 
 export class UserModel implements User {
-  cc: string;
-  created_at: Date;
+  id: string;
+  adminUid: string;
+  createdAt: Date;
+  documentNumber: string;
   email: string;
-  image: string;
-  is_active: boolean;
-  last_name: string;
+  imagePath: string;
+  lastName: string;
   name: string;
-  phone: string;
-  type: string;
-  uid: string;
-  updated_at: Date;
+  updatedAt: Date;
+  verified: boolean;
+  type: 'admin' | 'user';
 
   constructor(userData: Partial<User>) {
-    this.cc = userData.cc || '';
-    this.created_at = userData.created_at || new Date();
+    this.id = userData.id || '';
+    this.adminUid = userData.adminUid || '';
+    this.createdAt = userData.createdAt || new Date();
+    this.documentNumber = userData.documentNumber || '';
     this.email = userData.email || '';
-    this.image = userData.image || '';
-    this.is_active = userData.is_active || false;
-    this.last_name = userData.last_name || '';
+    this.imagePath = userData.imagePath || '';
+    this.lastName = userData.lastName || '';
     this.name = userData.name || '';
-    this.phone = userData.phone || '';
-    this.type = userData.type || '';
-    this.uid = userData.uid || '';
-    this.updated_at = userData.updated_at || new Date();
+    this.updatedAt = userData.updatedAt || new Date();
+    this.verified = userData.verified || false;
+    this.type = userData.type || 'user';
   }
 
-  /**
-   * Check if the user is an admin
-   * @returns boolean indicating if user is admin
-   */
   isAdmin(): boolean {
     return this.type === 'admin';
   }
