@@ -10,6 +10,7 @@ import {
   query,
   where,
   orderBy,
+  updateDoc,
 } from "firebase/firestore";
 import { FIREBASE_FIRESTORE } from "./firebase.providers";
 import { User, UserModel } from "../models/user.model";
@@ -202,6 +203,16 @@ export class FirestoreService {
     } catch (error) {
       console.error("Error getting all users:", error);
       throw new Error("Error al obtener la lista de usuarios");
+    }
+  }
+
+  async updateUserStatus(id: string, status: boolean): Promise<void> {
+    try {
+      const userDocRef = doc(this.firestore, "users", id);
+      await updateDoc(userDocRef, { verified: status, updatedAt: new Date() });
+    } catch (error) {
+      console.error("Error updating user status:", error);
+      throw new Error("Error al actualizar el estado del usuario");
     }
   }
 }

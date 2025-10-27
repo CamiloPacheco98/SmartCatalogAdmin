@@ -70,12 +70,8 @@ export class UsersComponent implements OnInit {
       const newStatus = this.tempVerificationStatus[user.id];
 
       // Update in Firestore
-      // const userDocRef = doc(this.firestore, 'users', user.id);
-      // await updateDoc(userDocRef, {
-      //   verified: newStatus,
-      //   updatedAt: new Date()
-      // });
-
+      await this.firestoreService.updateUserStatus(user.id, newStatus);
+      
       // Update local user object
       user.verified = newStatus;
       user.updatedAt = new Date();
