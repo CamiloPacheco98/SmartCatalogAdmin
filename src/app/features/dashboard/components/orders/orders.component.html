@@ -1,0 +1,77 @@
+<div class="orders-container">
+  <div class="orders-header">
+    <h1 class="orders-title">Orders Management</h1>
+    <div class="orders-stats">
+      <div class="stat-item">
+        <span class="stat-number">{{ totalOrders }}</span>
+        <span class="stat-label">Total Orders</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ deliveredOrders }}</span>
+        <span class="stat-label">Delivered</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{{ pendingOrders }}</span>
+        <span class="stat-label">Pending</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="orders-content">
+    <div class="orders-list">
+      <div class="order-item" *ngFor="let order of orders || []; trackBy: trackByOrderId">
+        <div class="order-header">
+          <div class="order-id">
+            <span class="order-id-label">Order ID:</span>
+            <span class="order-id-value">{{ order.id }}</span>
+          </div>
+          <div class="order-status">
+            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+              {{ getStatusText(order.status) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="order-body">
+          <div class="order-user">
+            <div class="user-avatar">
+              <img [src]="order.user.image" [alt]="order.user.name" class="avatar-image">
+            </div>
+            <div class="user-info">
+              <h3 class="user-name">{{ order.user.name }}</h3>
+              <p class="user-email">{{ order.user.email }}</p>
+            </div>
+          </div>
+
+          <div class="order-details">
+            <div class="order-products">
+              <h4 class="products-title">Products:</h4>
+              <div class="products-list">
+                <span class="product-item" *ngFor="let product of order.products">
+                  {{ product }}
+                </span>
+              </div>
+            </div>
+
+            <div class="order-meta">
+              <div class="order-date">
+                <span class="date-label">Created:</span>
+                <span class="date-value">{{ formatDate(order.createdAt) }}</span>
+              </div>
+              <div class="order-total">
+                <span class="total-label">Total:</span>
+                <span class="total-value">{{ formatCurrency(order.total) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="order-actions">
+          <button class="btn btn-outline btn-sm">View Details</button>
+          <button class="btn btn-primary btn-sm" *ngIf="order.status === 'pending'">Process</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="order.status === 'processing'">Ship</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
