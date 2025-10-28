@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import { FIREBASE_FIRESTORE } from "./firebase.providers";
 import { User, UserModel } from "../models/user.model";
+import { Order, OrderModel } from "../models/order.model";
 
 export interface Product {
   id: string;
@@ -213,6 +214,22 @@ export class FirestoreService {
     } catch (error) {
       console.error("Error updating user status:", error);
       throw new Error("Error al actualizar el estado del usuario");
+    }
+  }
+
+  async getAllOrders(adminUid: string): Promise<Order[]> {
+    try {
+      const ordersCollection = query(collection(this.firestore, "orders"), where("adminUid", "==", adminUid), orderBy("updatedAt", "desc"));
+      const querySnapshot = await getDocs(ordersCollection);
+      const orders: Order[] = [];
+      querySnapshot.forEach((doc) => {
+        const orderMap = doc.data() as Order;
+        orders.push(new OrderModel(orderMap));
+      });
+      return orders;
+    } catch (error) {
+      console.error("Error getting all orders:", error);
+      throw new Error("Error al obtener la lista de pedidos");
     }
   }
 }

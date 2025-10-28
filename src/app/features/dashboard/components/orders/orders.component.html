@@ -35,7 +35,7 @@
         <div class="order-body">
           <div class="order-user">
             <div class="user-avatar">
-              <img [src]="order.user.image" [alt]="order.user.name" class="avatar-image">
+              <img [src]="order.user.imagePath" [alt]="order.user.name" class="avatar-image">
             </div>
             <div class="user-info">
               <h3 class="user-name">{{ order.user.name }}</h3>
@@ -48,7 +48,7 @@
               <h4 class="products-title">Products:</h4>
               <div class="products-list">
                 <span class="product-item" *ngFor="let product of order.products">
-                  {{ product }}
+                  {{ product.name }}
                 </span>
               </div>
             </div>
