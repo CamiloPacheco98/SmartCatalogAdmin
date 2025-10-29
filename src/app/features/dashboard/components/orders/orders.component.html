@@ -18,8 +18,8 @@
   </div>
 
   <div class="orders-content">
-    <div class="orders-list">
-      <div class="order-item" *ngFor="let order of orders || []; trackBy: trackByOrderId">
+    <div class="orders-list" *ngIf="orders && orders.length > 0; else emptyState">
+      <div class="order-item" *ngFor="let order of orders; trackBy: trackByOrderId">
         <div class="order-header">
           <div class="order-id">
             <span class="order-id-label">Order ID:</span>
@@ -73,5 +73,14 @@
         </div>
       </div>
     </div>
+    <ng-template #emptyState>
+      <div class="orders-empty">
+        <div class="orders-empty-content">
+          <div class="orders-empty-icon">🧾</div>
+          <h2 class="orders-empty-title">No orders yet</h2>
+          <p class="orders-empty-subtitle">New orders will show up here as soon as customers place them.</p>
+        </div>
+      </div>
+    </ng-template>
   </div>
 </div>
