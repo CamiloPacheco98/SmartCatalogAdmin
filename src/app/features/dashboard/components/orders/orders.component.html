@@ -67,7 +67,7 @@
         </div>
 
         <div class="order-actions">
-          <button class="btn btn-outline btn-sm">View Details</button>
+          <button class="btn btn-outline btn-sm" (click)="viewOrderDetails(order.id)">View Details</button>
           <button class="btn btn-primary btn-sm" *ngIf="order.status === 'pending'">Process</button>
           <button class="btn btn-secondary btn-sm" *ngIf="order.status === 'processing'">Ship</button>
         </div>

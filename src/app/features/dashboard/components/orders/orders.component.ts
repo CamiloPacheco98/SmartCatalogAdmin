@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { Order } from '../../../../core/models/order.model';
 import { FirestoreService } from '../../../../core/services/firestore.service';
 import { AuthService } from '../../../../core/services/auth.service';
-import { StorageService } from '../../../../core/services/storage.service';
 
 @Component({
     selector: 'app-orders',
@@ -17,7 +17,11 @@ export class OrdersComponent implements OnInit {
     loading = false;
     error: string | null = null;
 
-    constructor(private firestoreService: FirestoreService, private authService: AuthService, private storageService: StorageService) { }
+    constructor(
+        private firestoreService: FirestoreService,
+        private authService: AuthService,
+        private router: Router
+    ) { }
 
     ngOnInit(): void {
         this.getOrders();
@@ -41,7 +45,7 @@ export class OrdersComponent implements OnInit {
             this.error = null;
             const currentUid = this._getCurrentUid();
             if (currentUid) {
-             this.orders = await this.firestoreService.getAllOrders(currentUid);
+                this.orders = await this.firestoreService.getAllOrders(currentUid);
             }
         } catch (error) {
             console.error('Error loading users:', error);
@@ -109,5 +113,9 @@ export class OrdersComponent implements OnInit {
 
     trackByOrderId(index: number, order: Order): string {
         return order.id;
+    }
+
+    viewOrderDetails(orderId: string): void {
+        this.router.navigate(['/dashboard/orders', orderId], { state: { order: this.orders.find(o => o.id === orderId) } });
     }
 }

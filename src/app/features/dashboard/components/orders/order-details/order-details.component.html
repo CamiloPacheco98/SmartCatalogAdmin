@@ -1,0 +1,168 @@
+<div class="order-details-container" *ngIf="order">
+  <!-- Header Section -->
+  <div class="order-header">
+    <div class="order-title">
+      <button class="btn btn-outline btn-sm back-button" (click)="goBackToOrders()">
+        ← Volver a Órdenes
+      </button>
+      <h1>Detalles de la Orden</h1>
+      <div class="order-id">#{{ order.id }}</div>
+    </div>
+    <div class="order-status">
+      <span class="status-badge" [ngClass]="getStatusClass(order.status)">
+        {{ getStatusText(order.status) }}
+      </span>
+    </div>
+  </div>
+
+  <!-- Order Information Cards -->
+  <div class="order-info-grid">
+    <!-- Order Summary Card -->
+    <div class="info-card">
+      <div class="card-header">
+        <h3>Resumen de la Orden</h3>
+      </div>
+      <div class="card-content">
+        <div class="info-row">
+          <span class="label">Fecha de Creación:</span>
+          <span class="value">{{ formatDate(order.createdAt) }}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Total de Productos:</span>
+          <span class="value">{{ getTotalProducts() }} productos</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Subtotal:</span>
+          <span class="value">{{ formatCurrency(getSubtotal()) }}</span>
+        </div>
+        <div class="info-row total-row">
+          <span class="label">Total:</span>
+          <span class="value total-amount">{{ formatCurrency(order.total) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Information Card -->
+    <div class="info-card">
+      <div class="card-header">
+        <h3>Información del Cliente</h3>
+      </div>
+      <div class="card-content">
+        <div class="customer-avatar">
+          <img [src]="order.user.imagePath || '/default-avatar.svg'" 
+               [alt]="order.user.name" 
+               class="avatar-image">
+        </div>
+        <div class="customer-info">
+          <div class="info-row">
+            <span class="label">Nombre:</span>
+            <span class="value">{{ order.user.name }} {{ order.user.lastName }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Email:</span>
+            <span class="value">{{ order.user.email }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Documento:</span>
+            <span class="value">{{ order.user.documentNumber }}</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Verificado:</span>
+            <span class="value" [ngClass]="order.user.verified ? 'verified' : 'not-verified'">
+              {{ order.user.verified ? 'Sí' : 'No' }}
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="label">Tipo de Usuario:</span>
+            <span class="value user-type">{{ order.user.type === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products Section -->
+  <div class="products-section">
+    <div class="section-header">
+      <h2>Productos en la Orden</h2>
+      <span class="product-count">{{ getTotalProducts() }} productos</span>
+    </div>
+    
+    <div class="products-grid" *ngIf="order.products && order.products.length > 0">
+      <div class="product-card" *ngFor="let product of order.products; trackBy: trackByProductId">
+        <div class="product-info">
+          <h4 class="product-name">{{ product.name }}</h4>
+          <p class="product-description">{{ product.desc }}</p>
+          <div class="product-meta">
+            <span class="product-page">{{ product.pageName }} - Página {{ product.pageIndex }}</span>
+          </div>
+        </div>
+        <div class="product-price">
+          <span class="price-amount">{{ formatCurrency(product.price) }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="no-products" *ngIf="!order.products || order.products.length === 0">
+      <div class="no-products-icon">📦</div>
+      <p>No hay productos en esta orden</p>
+    </div>
+  </div>
+
+  <!-- Order Timeline (Optional) -->
+  <div class="order-timeline">
+    <div class="section-header">
+      <h2>Historial de la Orden</h2>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-marker created"></div>
+        <div class="timeline-content">
+          <h4>Orden Creada</h4>
+          <p>{{ formatDate(order.createdAt) }}</p>
+        </div>
+      </div>
+      <div class="timeline-item" [ngClass]="{'active': order.status !== 'pending'}">
+        <div class="timeline-marker processing"></div>
+        <div class="timeline-content">
+          <h4>En Procesamiento</h4>
+          <p *ngIf="order.status === 'processing'">Procesando orden...</p>
+          <p *ngIf="order.status !== 'processing'">Pendiente</p>
+        </div>
+      </div>
+      <div class="timeline-item" [ngClass]="{'active': order.status === 'shipped' || order.status === 'delivered'}">
+        <div class="timeline-marker shipped"></div>
+        <div class="timeline-content">
+          <h4>Enviado</h4>
+          <p *ngIf="order.status === 'shipped'">Producto en camino</p>
+          <p *ngIf="order.status === 'delivered'">Entregado</p>
+          <p *ngIf="order.status !== 'shipped' && order.status !== 'delivered'">Pendiente</p>
+        </div>
+      </div>
+      <div class="timeline-item" [ngClass]="{'active': order.status === 'delivered'}">
+        <div class="timeline-marker delivered"></div>
+        <div class="timeline-content">
+          <h4>Entregado</h4>
+          <p *ngIf="order.status === 'delivered'">Orden completada</p>
+          <p *ngIf="order.status !== 'delivered'">Pendiente</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-container" *ngIf="loading">
+  <div class="loading-spinner"></div>
+  <p>Cargando detalles de la orden...</p>
+</div>
+
+<!-- Error State -->
+<div class="error-container" *ngIf="error && !loading">
+  <div class="error-icon">⚠️</div>
+  <h3>Error al cargar la orden</h3>
+  <p>{{ error }}</p>
+  <button class="btn btn-primary" (click)="goBackToOrders()">
+    Volver a Órdenes
+  </button>
+</div>
