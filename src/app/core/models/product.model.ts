@@ -7,6 +7,7 @@ export interface Product {
     createdAt?: Date;
     updatedAt?: Date;
     desc: string;
+    quantity: string;
 }
 
 export class ProductModel implements Product {
@@ -18,6 +19,7 @@ export class ProductModel implements Product {
     createdAt?: Date;
     updatedAt?: Date;
     desc: string;
+    quantity: string;
 
     constructor(productData: Product) {
         this.id = productData.id;
@@ -28,5 +30,6 @@ export class ProductModel implements Product {
         this.createdAt = productData.createdAt;
         this.updatedAt = productData.updatedAt;
         this.desc = productData.desc;
+        this.quantity = productData.quantity;
     }
 }

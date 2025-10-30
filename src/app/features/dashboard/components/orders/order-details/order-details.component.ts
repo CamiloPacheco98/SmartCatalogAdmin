@@ -15,10 +15,11 @@ export class OrderDetailsComponent implements OnInit {
   @Input() order?: OrderModel;
   loading = false;
   error: string | null = null;
+  isOrderSummaryExpanded = false;
 
   constructor(
     private router: Router,
- 
+
   ) { }
 
   ngOnInit(): void {
@@ -78,12 +79,23 @@ export class OrderDetailsComponent implements OnInit {
     }).format(amount);
   }
 
-  getTotalProducts(): number {
-    return this.order?.products?.length || 0;
+  formatNumber(quantity: string): number {
+    return Number(quantity);
   }
 
+  getTotalProducts(): number {
+    const total =
+      this.order?.products?.reduce(
+        (total, product) => total + Number(product.quantity),
+        0
+      ) || 0;
+
+    return Number(total);
+  }
+
+
   getSubtotal(): number {
-    return this.order?.products?.reduce((total, product) => total + product.price, 0) || 0;
+    return this.order?.products?.reduce((total, product) => total + (product.price * Number(product.quantity)), 0) || 0;
   }
 
   trackByProductId(index: number, product: ProductModel): string {
@@ -92,5 +104,9 @@ export class OrderDetailsComponent implements OnInit {
 
   goBackToOrders(): void {
     this.router.navigate(['/dashboard/orders']);
+  }
+
+  toggleOrderSummaryExpansion(): void {
+    this.isOrderSummaryExpanded = !this.isOrderSummaryExpanded;
   }
 }

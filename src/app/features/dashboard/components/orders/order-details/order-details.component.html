@@ -21,6 +21,10 @@
     <div class="info-card">
       <div class="card-header">
         <h3>Resumen de la Orden</h3>
+        <button class="expand-button" (click)="toggleOrderSummaryExpansion()" [class.expanded]="isOrderSummaryExpanded">
+          <span class="expand-icon">{{ isOrderSummaryExpanded ? '▼' : '▶' }}</span>
+          <span class="expand-text">{{ isOrderSummaryExpanded ? 'Ocultar' : 'Ver' }} productos</span>
+        </button>
       </div>
       <div class="card-content">
         <div class="info-row">
@@ -39,6 +43,36 @@
           <span class="label">Total:</span>
           <span class="value total-amount">{{ formatCurrency(order.total) }}</span>
         </div>
+
+        <!-- Expandable Products Detail -->
+        <div class="expandable-content" [class.expanded]="isOrderSummaryExpanded">
+          <div class="products-breakdown">
+            <h4>Desglose de Productos</h4>
+            <div class="products-list" *ngIf="order.products && order.products.length > 0">
+              <div class="product-breakdown-item" *ngFor="let product of order.products; trackBy: trackByProductId">
+                <div class="product-details">
+                  <span class="product-name">{{ product.name }}</span>
+                  <span class="product-page">{{ product.pageName }} - Página {{ product.pageIndex }}</span>
+                </div>
+                <div class="product-quantity-price">
+                  <span class="quantity">Cantidad: {{ product.quantity }}</span>
+                  <span class="unit-price">{{ formatCurrency(product.price) }} c/u</span>
+                  <span class="total-price">{{ formatCurrency(product.price * formatNumber(product.quantity)) }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="breakdown-total">
+              <div class="breakdown-row">
+                <span class="label">Subtotal:</span>
+                <span class="value">{{ formatCurrency(getSubtotal()) }}</span>
+              </div>
+              <div class="breakdown-row total-row">
+                <span class="label">Total:</span>
+                <span class="value total-amount">{{ formatCurrency(order.total) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -49,9 +83,7 @@
       </div>
       <div class="card-content">
         <div class="customer-avatar">
-          <img [src]="order.user.imagePath || '/default-avatar.svg'" 
-               [alt]="order.user.name" 
-               class="avatar-image">
+          <img [src]="order.user.imagePath || '/default-avatar.svg'" [alt]="order.user.name" class="avatar-image">
         </div>
         <div class="customer-info">
           <div class="info-row">
@@ -87,7 +119,7 @@
       <h2>Productos en la Orden</h2>
       <span class="product-count">{{ getTotalProducts() }} productos</span>
     </div>
-    
+
     <div class="products-grid" *ngIf="order.products && order.products.length > 0">
       <div class="product-card" *ngFor="let product of order.products; trackBy: trackByProductId">
         <div class="product-info">
@@ -102,7 +134,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="no-products" *ngIf="!order.products || order.products.length === 0">
       <div class="no-products-icon">📦</div>
       <p>No hay productos en esta orden</p>
