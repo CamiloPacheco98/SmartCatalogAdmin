@@ -198,6 +198,12 @@ export class FirestoreService {
       const users: User[] = [];
       querySnapshot.forEach((doc) => {
         const userData = doc.data();
+        if (userData['createdAt']?.toDate) {
+          userData['createdAt'] = userData['createdAt'].toDate();
+        }
+        if (userData['updatedAt']?.toDate) {
+          userData['updatedAt'] = userData['updatedAt'].toDate();
+        }
         users.push(new UserModel(userData));
       });
       return users;
@@ -217,11 +223,11 @@ export class FirestoreService {
     }
   }
 
-  async getAllOrders(adminUid: string): Promise<Order[]> {
+  async getAllOrders(adminUid: string): Promise<OrderModel[]> {
     try {
       const ordersCollection = query(collection(this.firestore, "orders"), where("adminUid", "==", adminUid), orderBy("updatedAt", "desc"));
       const querySnapshot = await getDocs(ordersCollection);
-      const orders: Order[] = [];
+      const orders: OrderModel[] = [];
       querySnapshot.forEach((doc) => {
         const orderMap = doc.data() as Order;
         orders.push(new OrderModel(orderMap));

@@ -26,8 +26,8 @@
             <span class="order-id-value">{{ order.id }}</span>
           </div>
           <div class="order-status">
-            <span class="status-badge" [ngClass]="getStatusClass(order.status)">
-              {{ getStatusText(order.status) }}
+            <span class="status-badge" [ngClass]="order.statusClass">
+              {{ order.statusText }}
             </span>
           </div>
         </div>
@@ -56,11 +56,11 @@
             <div class="order-meta">
               <div class="order-date">
                 <span class="date-label">Created:</span>
-                <span class="date-value">{{ formatDate(order.createdAt) }}</span>
+                <span class="date-value">{{ order.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}</span>
               </div>
               <div class="order-total">
                 <span class="total-label">Total:</span>
-                <span class="total-value">{{ formatCurrency(order.total) }}</span>
+                <span class="total-value">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
             </div>
           </div>

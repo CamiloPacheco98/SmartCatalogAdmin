@@ -39,6 +39,11 @@ export class HomeComponent implements OnInit {
   signinError: string | null = null;
   signinSuccess = false;
 
+  //file Size properties
+  pdfFileSize: String = "";
+  jsonFileSize: String = "";
+
+
   constructor(
     private storageService: StorageService,
     private pdfCoService: PdfCoService,
@@ -97,10 +102,12 @@ export class HomeComponent implements OnInit {
     }
 
     this.selectedFile = file;
+    this.pdfFileSize = this.formatFileSize(file.size);
   }
 
   removeFile(): void {
     this.selectedFile = null;
+    this.pdfFileSize = "";
     this.clearMessages();
   }
 
@@ -145,6 +152,7 @@ export class HomeComponent implements OnInit {
       this.uploadSuccess = true;
       this.uploadProgress = "";
       this.selectedFile = null;
+      this.pdfFileSize = "";
 
       // Clear success message after 3 seconds
       setTimeout(() => {
@@ -266,7 +274,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  formatFileSize(bytes: number): string {
+  private formatFileSize(bytes: number): string {
     if (bytes === 0) return "0 Bytes";
 
     const k = 1024;
@@ -329,6 +337,7 @@ export class HomeComponent implements OnInit {
     }
 
     this.selectedJsonFile = file;
+    this.jsonFileSize = this.formatFileSize(file.size);
     this.validateJsonContent(file);
   }
 
@@ -344,6 +353,7 @@ export class HomeComponent implements OnInit {
         this.jsonUploadError =
           "JSON file does not contain valid product data. Expected structure: {enrichments: [...]} or {products: [...]} or array of products";
         this.selectedJsonFile = null;
+        this.jsonFileSize = "";
         return;
       }
 
@@ -352,6 +362,7 @@ export class HomeComponent implements OnInit {
     } catch (error) {
       this.jsonUploadError = "Invalid JSON format. Please check your file.";
       this.selectedJsonFile = null;
+      this.jsonFileSize = "";
     }
   }
 
@@ -397,6 +408,7 @@ export class HomeComponent implements OnInit {
   removeJsonFile(): void {
     this.selectedJsonFile = null;
     this.jsonData = null;
+    this.jsonFileSize = "";
     this.clearJsonMessages();
   }
 
@@ -439,6 +451,7 @@ export class HomeComponent implements OnInit {
       this.isJsonUploading = false;
       this.jsonUploadSuccess = true;
       this.selectedJsonFile = null;
+      this.jsonFileSize = "";
       this.jsonData = null;
 
       // Clear success message after 5 seconds

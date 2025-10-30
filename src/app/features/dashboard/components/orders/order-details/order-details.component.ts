@@ -16,6 +16,9 @@ export class OrderDetailsComponent implements OnInit {
   loading = false;
   error: string | null = null;
   isOrderSummaryExpanded = false;
+  totalProducts = 0;
+  subtotal = 0;
+
 
   constructor(
     private router: Router,
@@ -32,6 +35,8 @@ export class OrderDetailsComponent implements OnInit {
       this.error = null;
       const state = this.router.lastSuccessfulNavigation?.extras.state as { order?: OrderModel };
       this.order = state?.order || undefined;
+      this.totalProducts = this.getTotalProducts();
+      this.subtotal = this.getSubtotal();
     } catch (error) {
       console.error('Error loading order:', error);
       this.error = 'Error al cargar los detalles de la orden';
@@ -40,53 +45,10 @@ export class OrderDetailsComponent implements OnInit {
     }
   }
 
-  getStatusClass(status: string): string {
-    const statusClasses: { [key: string]: string } = {
-      'pending': 'status-pending',
-      'processing': 'status-processing',
-      'shipped': 'status-shipped',
-      'delivered': 'status-delivered',
-      'cancelled': 'status-cancelled'
-    };
-    return statusClasses[status] || 'status-pending';
-  }
-
-  getStatusText(status: string): string {
-    const statusTexts: { [key: string]: string } = {
-      'pending': 'Pendiente',
-      'processing': 'Procesando',
-      'shipped': 'Enviado',
-      'delivered': 'Entregado',
-      'cancelled': 'Cancelado'
-    };
-    return statusTexts[status] || 'Pendiente';
-  }
-
-  formatDate(date: Date): string {
-    return new Date(date).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
-  formatCurrency(amount: number): string {
-    return new Intl.NumberFormat('es-CO', {
-      style: 'currency',
-      currency: 'COP'
-    }).format(amount);
-  }
-
-  formatNumber(quantity: string): number {
-    return Number(quantity);
-  }
-
-  getTotalProducts(): number {
+  private getTotalProducts(): number {
     const total =
       this.order?.products?.reduce(
-        (total, product) => total + Number(product.quantity),
+        (total, product) => total + product.quantityNumber,
         0
       ) || 0;
 
@@ -94,8 +56,8 @@ export class OrderDetailsComponent implements OnInit {
   }
 
 
-  getSubtotal(): number {
-    return this.order?.products?.reduce((total, product) => total + (product.price * Number(product.quantity)), 0) || 0;
+  private getSubtotal(): number {
+    return this.order?.products?.reduce((total, product) => total + (product.price * product.quantityNumber), 0) || 0;
   }
 
   trackByProductId(index: number, product: ProductModel): string {

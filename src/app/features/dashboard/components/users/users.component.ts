@@ -71,7 +71,7 @@ export class UsersComponent implements OnInit {
 
       // Update in Firestore
       await this.firestoreService.updateUserStatus(user.id, newStatus);
-      
+
       // Update local user object
       user.verified = newStatus;
       user.updatedAt = new Date();
@@ -85,27 +85,4 @@ export class UsersComponent implements OnInit {
       this.error = 'Error al actualizar el estad  o del usuario';
     }
   }
-
-  getFullName(user: User): string {
-    return `${user.name} ${user.lastName}`.trim();
-  }
-
-  formatDate(date: Date): string {
-    return new Intl.DateTimeFormat('es-ES', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-  }
-
-  getStatusClass(isActive: boolean): string {
-    return isActive ? 'status-verified' : 'status-unverified';
-  }
-
-  getStatusText(isActive: boolean): string {
-    return isActive ? 'Verificado' : 'No verificado';
-  }
-
 }

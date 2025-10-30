@@ -20,6 +20,7 @@ export class ProductModel implements Product {
     updatedAt?: Date;
     desc: string;
     quantity: string;
+    quantityNumber: number;
 
     constructor(productData: Product) {
         this.id = productData.id;
@@ -31,5 +32,6 @@ export class ProductModel implements Product {
         this.updatedAt = productData.updatedAt;
         this.desc = productData.desc;
         this.quantity = productData.quantity;
+        this.quantityNumber = Number(productData.quantity);
     }
 }
