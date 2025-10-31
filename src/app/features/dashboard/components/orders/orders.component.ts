@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { OrderModel } from '../../../../core/models/order.model';
 import { FirestoreService } from '../../../../core/services/firestore.service';
 import { AuthService } from '../../../../core/services/auth.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-orders',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, TranslatePipe],
     templateUrl: './orders.component.html',
     styleUrls: ['./orders.component.css']
 })
@@ -23,7 +24,8 @@ export class OrdersComponent implements OnInit {
     constructor(
         private firestoreService: FirestoreService,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private translate: TranslateService
     ) { }
 
     ngOnInit(): void {
@@ -43,7 +45,7 @@ export class OrdersComponent implements OnInit {
             }
         } catch (error) {
             console.error('Error loading users:', error);
-            this.error = 'Error al cargar los usuarios';
+            this.error = this.translate.instant('app.orderDetails.error.loadingOrderDetails');
         } finally {
             this.loading = false;
         }

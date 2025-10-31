@@ -1,172 +1,167 @@
 <!-- Main Content -->
 <main class="home-content">
   <div class="content-wrapper">
-       <!-- Sign-in Link Section -->
-       <div class="upload-section">
-        <div class="upload-card">
-          <h3>Send Sign-in Link</h3>
-          <p>Send a secure sign-in link to another user</p>
+    <!-- Sign-in Link Section -->
+    <div class="upload-section">
+      <div class="upload-card">
+        <h3>{{ 'app.home.sendSigninLink.title' | translate }}</h3>
+        <p>{{ 'app.home.sendSigninLink.subtitle' | translate }}</p>
 
-          <div class="signin-form">
-            <div class="form-group">
-              <label for="userEmail">User Email</label>
-              <input 
-                type="email" 
-                id="userEmail" 
-                [(ngModel)]="signinEmail" 
-                placeholder="Enter user's email address"
-                class="form-input"
-              >
-            </div>
-
-            @if(signinError){
-            <div class="error-message">
-              {{ signinError }}
-            </div>
-            }
-
-            @if(signinSuccess){
-            <div class="success-message">
-              ✅ Sign-in link sent successfully!
-            </div>
-            }
-
-            <div class="upload-actions">
-              <button 
-                class="upload-btn" 
-                [disabled]="!signinEmail || isSendingLink" 
-                (click)="sendSigninLink()"
-              >
-                @if(!isSendingLink){
-                <span>Send Sign-in Link</span>
-                }@else{
-                <span>Sending...</span>
-                }
-              </button>
-            </div>
-
-            @if(isSendingLink){
-            <div class="progress-message">
-              <div class="spinner"></div>
-              <span>Generating and sending sign-in link...</span>
-            </div>
-            }
-          </div>
-        </div>
-      </div>
-
-    <!-- PDF Upload Section -->
-      <div class="upload-section">
-        <div class="upload-card">
-          <h3>Upload PDF Document</h3>
-          <p>Select a PDF file to upload to the catalog</p>
-
-          <div class="upload-area" [class.drag-over]="isDragOver" (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
-            <div class="upload-content">
-              <div class="upload-icon">📄</div>
-              <p class="upload-text">
-                <strong>Click to browse</strong> or drag and drop your PDF file here
-              </p>
-              <p class="upload-hint">Maximum file size: 25MB</p>
-            </div>
+        <div class="signin-form">
+          <div class="form-group">
+            <label for="userEmail">{{ 'app.home.sendSigninLink.email' | translate }}</label>
+            <input type="email" id="userEmail" [(ngModel)]="signinEmail"
+              placeholder="{{ 'app.home.sendSigninLink.email.placeholder' | translate }}" class="form-input">
           </div>
 
-          <input #fileInput type="file" accept=".pdf" (change)="onFileSelected($event)" style="display: none;">
-          @if(selectedFile){
-          <div *ngIf="selectedFile" class="file-info">
-            <div class="file-details">
-              <span class="file-name">{{ selectedFile.name }}</span>
-              <span class="file-size">{{ pdfFileSize }}</span>
-            </div>
-            <button class="remove-file-btn" (click)="removeFile()">×</button>
-          </div>
-          }
-          @if(uploadError){
+          @if(signinError){
           <div class="error-message">
-            {{ uploadError }}
+            {{ signinError }}
           </div>
           }
-          <div class="upload-actions">
-            <button class="upload-btn" [disabled]="!selectedFile || isUploading" (click)="uploadFile()">
-              @if(!isUploading){
-              <span>Upload PDF</span>
-              }@else{
-              <span>Uploading...</span>
-              }
 
+          @if(signinSuccess){
+          <div class="success-message">
+            ✅ {{ 'app.home.sendSigninLink.success' | translate }}
+          </div>
+          }
+
+          <div class="upload-actions">
+            <button class="upload-btn" [disabled]="!signinEmail || isSendingLink" (click)="sendSigninLink()">
+              @if(!isSendingLink){
+              <span>{{ 'app.home.sendSigninLink.button' | translate }}</span>
+              }@else{
+              <span>{{ 'app.home.sendSigninLink.button.loading' | translate }}</span>
+              }
             </button>
           </div>
 
-          @if(isUploading && uploadProgress){
+          @if(isSendingLink){
           <div class="progress-message">
             <div class="spinner"></div>
-            <span>{{ uploadProgress }}</span>
-          </div>
-          }
-
-          @if(uploadSuccess){
-          <div class="success-message">
-            ✅ PDF uploaded successfully!
+            <span>{{ 'app.home.sendSigninLink.loading' | translate }}</span>
           </div>
           }
         </div>
       </div>
+    </div>
 
-      <!-- JSON Upload Section -->
-      <div class="upload-section">
-        <div class="upload-card">
-          <h3>Upload Product Catalog (JSON)</h3>
-          <p>Select a JSON file with product information for the catalog</p>
+    <!-- PDF Upload Section -->
+    <div class="upload-section">
+      <div class="upload-card">
+        <h3>{{ 'app.home.uploadPdf.title' | translate }}</h3>
+        <p>{{ 'app.home.uploadPdf.subtitle' | translate }}</p>
 
-          <div class="upload-area" [class.drag-over]="isJsonDragOver" (dragover)="onJsonDragOver($event)"
-            (dragleave)="onJsonDragLeave($event)" (drop)="onJsonDrop($event)" (click)="jsonFileInput.click()">
-            <div class="upload-content">
-              <div class="upload-icon">📋</div>
-              <p class="upload-text">
-                <strong>Click to browse</strong> or drag and drop your JSON file here
-              </p>
-              <p class="upload-hint">Maximum file size: 10MB</p>
-            </div>
+        <div class="upload-area" [class.drag-over]="isDragOver" (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+          <div class="upload-content">
+            <div class="upload-icon">📄</div>
+            <p class="upload-text">
+              <strong>{{ 'app.home.uploadPdf.button.browse' | translate }}</strong> {{ 'app.home.uploadPdf.button.or' |
+              translate }}
+            </p>
+            <p class="upload-hint">{{ 'app.home.uploadPdf.maxSize' | translate }}</p>
           </div>
-
-          <input #jsonFileInput type="file" accept=".json,application/json" (change)="onJsonFileSelected($event)" style="display: none;">
-          
-          @if(selectedJsonFile){
-          <div class="file-info">
-            <div class="file-details">
-              <span class="file-name">{{ selectedJsonFile.name }}</span>
-              <span class="file-size">{{ jsonFileSize }}</span>
-              @if(jsonData){
-              <span class="file-size">✓ Valid JSON with product data</span>
-              }
-            </div>
-            <button class="remove-file-btn" (click)="removeJsonFile()">×</button>
-          </div>
-          }
-          
-          @if(jsonUploadError){
-          <div class="error-message">
-            {{ jsonUploadError }}
-          </div>
-          }
-          
-          <div class="upload-actions">
-            <button class="upload-btn" [disabled]="!selectedJsonFile || !jsonData || isJsonUploading" (click)="uploadJsonFile()">
-              @if(!isJsonUploading){
-              <span>Upload JSON</span>
-              }@else{
-              <span>Uploading...</span>
-              }
-            </button>
-          </div>
-
-          @if(jsonUploadSuccess){
-          <div class="success-message">
-            ✅ JSON catalog uploaded successfully!
-          </div>
-          }
         </div>
+
+        <input #fileInput type="file" accept=".pdf" (change)="onFileSelected($event)" style="display: none;">
+        @if(selectedFile){
+        <div *ngIf="selectedFile" class="file-info">
+          <div class="file-details">
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="file-size">{{ pdfFileSize }}</span>
+          </div>
+          <button class="remove-file-btn" (click)="removeFile()">×</button>
+        </div>
+        }
+        @if(uploadError){
+        <div class="error-message">
+          {{ uploadError }}
+        </div>
+        }
+        <div class="upload-actions">
+          <button class="upload-btn" [disabled]="!selectedFile || isUploading" (click)="uploadFile()">
+            @if(!isUploading){
+            <span>{{ 'app.home.uploadPdf.button.upload' | translate }}</span>
+            }@else{
+            <span>{{ 'app.home.uploadPdf.button.loading' | translate }}</span>
+            }
+
+          </button>
+        </div>
+
+        @if(isUploading && uploadProgress){
+        <div class="progress-message">
+          <div class="spinner"></div>
+          <span>{{ uploadProgress }}</span>
+        </div>
+        }
+
+        @if(uploadSuccess){
+        <div class="success-message">
+          ✅ {{ 'app.home.uploadPdf.success' | translate }}
+        </div>
+        }
       </div>
+    </div>
+
+    <!-- JSON Upload Section -->
+    <div class="upload-section">
+      <div class="upload-card">
+        <h3>{{ 'app.home.uploadJson.title' | translate }}</h3>
+        <p>{{ 'app.home.uploadJson.subtitle' | translate }}</p>
+
+        <div class="upload-area" [class.drag-over]="isJsonDragOver" (dragover)="onJsonDragOver($event)"
+          (dragleave)="onJsonDragLeave($event)" (drop)="onJsonDrop($event)" (click)="jsonFileInput.click()">
+          <div class="upload-content">
+            <div class="upload-icon">📋</div>
+            <p class="upload-text">
+              <strong>{{ 'app.home.uploadJson.button.browse' | translate }}</strong> {{ 'app.home.uploadJson.button.or' |
+              translate }}
+            </p>
+            <p class="upload-hint">{{ 'app.home.uploadJson.maxSize' | translate }}</p>
+          </div>
+        </div>
+
+        <input #jsonFileInput type="file" accept=".json,application/json" (change)="onJsonFileSelected($event)"
+          style="display: none;">
+
+        @if(selectedJsonFile){
+        <div class="file-info">
+          <div class="file-details">
+            <span class="file-name">{{ selectedJsonFile.name }}</span>
+            <span class="file-size">{{ jsonFileSize }}</span>
+            @if(jsonData){
+            <span class="file-size">✓ {{ 'app.home.uploadJson.valid' | translate }}</span>
+            }
+          </div>
+          <button class="remove-file-btn" (click)="removeJsonFile()">×</button>
+        </div>
+        }
+
+        @if(jsonUploadError){
+        <div class="error-message">
+          {{ jsonUploadError }}
+        </div>
+        }
+
+        <div class="upload-actions">
+          <button class="upload-btn" [disabled]="!selectedJsonFile || !jsonData || isJsonUploading"
+            (click)="uploadJsonFile()">
+            @if(!isJsonUploading){
+            <span>{{ 'app.home.uploadJson.button.upload' | translate }}</span>
+            }@else{
+            <span>{{ 'app.home.uploadJson.button.loading' | translate }}</span>
+            }
+          </button>
+        </div>
+
+        @if(jsonUploadSuccess){
+        <div class="success-message">
+          ✅ {{ 'app.home.uploadJson.success' | translate }}
+        </div>
+        }
+      </div>
+    </div>
   </div>
 </main>

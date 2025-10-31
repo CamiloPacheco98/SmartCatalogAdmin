@@ -5,8 +5,9 @@ import {
   onAuthStateChanged,
   sendSignInLinkToEmail,
   User,
-  Auth
+  Auth,
 } from 'firebase/auth';
+import { TranslateService } from '@ngx-translate/core';
 import { FIREBASE_AUTH } from './firebase.providers';
 import { environment } from '../../../environments/environment';
 
@@ -16,7 +17,7 @@ import { environment } from '../../../environments/environment';
 export class AuthService {
   private currentUser: User | null = null;
 
-  constructor(@Inject(FIREBASE_AUTH) private auth: Auth) {
+  constructor(@Inject(FIREBASE_AUTH) private auth: Auth, private translate: TranslateService) {
     // Listen to authentication state changes
     onAuthStateChanged(this.auth, (user) => {
       this.currentUser = user;
@@ -102,18 +103,18 @@ export class AuthService {
    * Handle authentication errors and return user-friendly messages
    */
   private handleAuthError(error: any): Error {
-    let message = 'Error de autenticación';
+    let message = this.translate.instant('app.auth.login.error.auth');
 
     switch (error.code) {
       case 'auth/too-many-requests':
-        message = 'Demasiados intentos fallidos. Intenta nuevamente más tarde';
+        message = this.translate.instant('app.auth.login.error.tooManyRequests');
         break;
       case 'auth/invalid-credential':
-        message = 'Credenciales inválidas';
+        message = this.translate.instant('app.auth.login.error.invalidCredentials');
         break;
       default:
         console.error('Error de autenticación:', error.message);
-        message = 'Error de autenticación';
+        message = this.translate.instant('app.auth.login.error.auth');
     }
 
     return new Error(message);

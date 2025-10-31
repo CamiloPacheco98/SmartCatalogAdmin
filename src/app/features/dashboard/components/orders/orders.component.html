@@ -1,18 +1,18 @@
 <div class="orders-container">
   <div class="orders-header">
-    <h1 class="orders-title">Orders Management</h1>
+    <h1 class="orders-title">{{ 'app.orders.title' | translate }}</h1>
     <div class="orders-stats">
       <div class="stat-item">
         <span class="stat-number">{{ totalOrders }}</span>
-        <span class="stat-label">Total Orders</span>
+        <span class="stat-label">{{ 'app.orders.totalOrders' | translate }}</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ deliveredOrders }}</span>
-        <span class="stat-label">Delivered</span>
+        <span class="stat-label">{{ 'app.orders.delivered' | translate }}</span>
       </div>
       <div class="stat-item">
         <span class="stat-number">{{ pendingOrders }}</span>
-        <span class="stat-label">Pending</span>
+        <span class="stat-label">{{ 'app.orders.pending' | translate }}</span>
       </div>
     </div>
   </div>
@@ -22,12 +22,12 @@
       <div class="order-item" *ngFor="let order of orders; trackBy: trackByOrderId">
         <div class="order-header">
           <div class="order-id">
-            <span class="order-id-label">Order ID:</span>
+            <span class="order-id-label">{{ 'app.orders.orderIdLabel' | translate }}:</span>
             <span class="order-id-value">{{ order.id }}</span>
           </div>
           <div class="order-status">
-            <span class="status-badge" [ngClass]="order.statusClass">
-              {{ order.statusText }}
+            <span class="status-badge" [ngClass]="'status-' + order.status">
+              {{ 'app.orders.status.' + order.status | translate }}
             </span>
           </div>
         </div>
@@ -45,7 +45,7 @@
 
           <div class="order-details">
             <div class="order-products">
-              <h4 class="products-title">Products:</h4>
+              <h4 class="products-title">{{ 'app.orders.productsTitle' | translate }}:</h4>
               <div class="products-list">
                 <span class="product-item" *ngFor="let product of order.products">
                   {{ product.name }}
@@ -55,11 +55,11 @@
 
             <div class="order-meta">
               <div class="order-date">
-                <span class="date-label">Created:</span>
+                <span class="date-label">{{ 'app.orders.createdLabel' | translate }}:</span>
                 <span class="date-value">{{ order.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}</span>
               </div>
               <div class="order-total">
-                <span class="total-label">Total:</span>
+                <span class="total-label">{{ 'app.orders.totalLabel' | translate }}:</span>
                 <span class="total-value">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
             </div>
@@ -67,9 +67,12 @@
         </div>
 
         <div class="order-actions">
-          <button class="btn btn-outline btn-sm" (click)="viewOrderDetails(order.id)">View Details</button>
-          <button class="btn btn-primary btn-sm" *ngIf="order.status === 'pending'">Process</button>
-          <button class="btn btn-secondary btn-sm" *ngIf="order.status === 'processing'">Ship</button>
+          <button class="btn btn-outline btn-sm" (click)="viewOrderDetails(order.id)">{{ 'app.orders.viewDetails' |
+            translate }}</button>
+          <button class="btn btn-primary btn-sm" *ngIf="order.status === 'pending'">{{ 'app.orders.process' | translate
+            }}</button>
+          <button class="btn btn-secondary btn-sm" *ngIf="order.status === 'processing'">{{ 'app.orders.ship' |
+            translate }}</button>
         </div>
       </div>
     </div>
@@ -77,8 +80,9 @@
       <div class="orders-empty">
         <div class="orders-empty-content">
           <div class="orders-empty-icon">🧾</div>
-          <h2 class="orders-empty-title">No orders yet</h2>
-          <p class="orders-empty-subtitle">New orders will show up here as soon as customers place them.</p>
+          <h2 class="orders-empty-title">{{ 'app.orders.noOrdersYet' | translate }}</h2>
+          <p class="orders-empty-subtitle">{{ 'app.orders.newOrdersWillShowUpHereAsSoonAsCustomersPlaceThem' | translate
+            }}</p>
         </div>
       </div>
     </ng-template>

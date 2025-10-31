@@ -3,14 +3,14 @@
   <div class="order-header">
     <div class="order-title">
       <button class="btn btn-outline btn-sm back-button" (click)="goBackToOrders()">
-        ← Volver a Órdenes
+        ← {{ 'app.orderDetails.backToOrders' | translate }}
       </button>
-      <h1>Detalles de la Orden</h1>
+      <h1>{{ 'app.orderDetails.orderDetailsTitle' | translate }}</h1>
       <div class="order-id">#{{ order.id }}</div>
     </div>
     <div class="order-status">
-      <span class="status-badge" [ngClass]="order.statusClass">
-        {{ order.statusText }}
+      <span class="status-badge" [ngClass]="'status-' + order.status">
+        {{ 'app.orders.status.' + order.status | translate }}
       </span>
     </div>
   </div>
@@ -20,43 +20,46 @@
     <!-- Order Summary Card -->
     <div class="info-card">
       <div class="card-header">
-        <h3>Resumen de la Orden</h3>
+        <h3>{{ 'app.orderDetails.orderSummaryTitle' | translate }}</h3>
         <button class="expand-button" (click)="toggleOrderSummaryExpansion()" [class.expanded]="isOrderSummaryExpanded">
           <span class="expand-icon">{{ isOrderSummaryExpanded ? '▼' : '▶' }}</span>
-          <span class="expand-text">{{ isOrderSummaryExpanded ? 'Ocultar' : 'Ver' }} productos</span>
+          <span class="expand-text">{{ isOrderSummaryExpanded ? ('app.orderDetails.hideProducts' | translate) :
+            'app.orderDetails.viewProducts' |
+            translate }}</span>
         </button>
       </div>
       <div class="card-content">
         <div class="info-row">
-          <span class="label">Fecha de Creación:</span>
+          <span class="label">{{ 'app.orderDetails.createdLabel' | translate }}:</span>
           <span class="value">{{ order.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}</span>
         </div>
         <div class="info-row">
-          <span class="label">Total de Productos:</span>
-          <span class="value">{{ totalProducts }} productos</span>
+          <span class="label">{{ 'app.orderDetails.totalProductsLabel' | translate }}:</span>
+          <span class="value">{{ totalProducts }} {{ 'app.orderDetails.products' | translate }}</span>
         </div>
         <div class="info-row">
-          <span class="label">Subtotal:</span>
+          <span class="label">{{ 'app.orderDetails.subtotalLabel' | translate }}:</span>
           <span class="value">{{ subtotal | currency:'COP' : 'symbol' : '1.0-0' }}</span>
         </div>
         <div class="info-row total-row">
-          <span class="label">Total:</span>
+          <span class="label">{{ 'app.orderDetails.totalLabel' | translate }}:</span>
           <span class="value total-amount">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
         </div>
 
         <!-- Expandable Products Detail -->
         <div class="expandable-content" [class.expanded]="isOrderSummaryExpanded">
           <div class="products-breakdown">
-            <h4>Desglose de Productos</h4>
+            <h4>{{ 'app.orderDetails.productsBreakdownTitle' | translate }}</h4>
             <div class="products-list" *ngIf="order.products && order.products.length > 0">
               <div class="product-breakdown-item" *ngFor="let product of order.products; trackBy: trackByProductId">
                 <div class="product-details">
                   <span class="product-name">{{ product.name }}</span>
-                  <span class="product-page">{{ product.pageName }} - Página {{ product.pageIndex }}</span>
+                  <span class="product-page"> {{ 'app.orderDetails.page' | translate }} {{ product.pageIndex }}</span>
                 </div>
                 <div class="product-quantity-price">
-                  <span class="quantity">Cantidad: {{ product.quantity }}</span>
-                  <span class="unit-price">{{ product.price | currency:'COP' : 'symbol' : '1.0-0' }} c/u</span>
+                  <span class="quantity">{{ 'app.orderDetails.quantity' | translate }}: {{ product.quantity }}</span>
+                  <span class="unit-price">{{ product.price | currency:'COP' : 'symbol' : '1.0-0' }} {{
+                    'app.orderDetails.unitPrice' | translate }}</span>
                   <span class="total-price">{{ product.price * product.quantityNumber | currency:'COP' : 'symbol' :
                     '1.0-0' }}</span>
                 </div>
@@ -64,11 +67,11 @@
             </div>
             <div class="breakdown-total">
               <div class="breakdown-row">
-                <span class="label">Subtotal:</span>
+                <span class="label">{{ 'app.orderDetails.subtotalLabel' | translate }}:</span>
                 <span class="value">{{ subtotal | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
               <div class="breakdown-row total-row">
-                <span class="label">Total:</span>
+                <span class="label">{{ 'app.orderDetails.totalLabel' | translate }}:</span>
                 <span class="value total-amount">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
             </div>
@@ -80,7 +83,7 @@
     <!-- Customer Information Card -->
     <div class="info-card">
       <div class="card-header">
-        <h3>Información del Cliente</h3>
+        <h3>{{ 'app.orderDetails.customerInformationTitle' | translate }}</h3>
       </div>
       <div class="card-content">
         <div class="customer-avatar">
@@ -88,26 +91,28 @@
         </div>
         <div class="customer-info">
           <div class="info-row">
-            <span class="label">Nombre:</span>
+            <span class="label">{{ 'app.orderDetails.nameLabel' | translate }}:</span>
             <span class="value">{{ order.user.name }} {{ order.user.lastName }}</span>
           </div>
           <div class="info-row">
-            <span class="label">Email:</span>
+            <span class="label">{{ 'app.orderDetails.emailLabel' | translate }}:</span>
             <span class="value">{{ order.user.email }}</span>
           </div>
           <div class="info-row">
-            <span class="label">Documento:</span>
+            <span class="label">{{ 'app.orderDetails.documentNumberLabel' | translate }}:</span>
             <span class="value">{{ order.user.documentNumber }}</span>
           </div>
           <div class="info-row">
-            <span class="label">Verificado:</span>
+            <span class="label">{{ 'app.orderDetails.verifiedLabel' | translate }}:</span>
             <span class="value" [ngClass]="order.user.verified ? 'verified' : 'not-verified'">
-              {{ order.user.verified ? 'Sí' : 'No' }}
+              {{ order.user.verified ? ('app.orderDetails.yes' | translate) : ('app.orderDetails.no' | translate) }}
             </span>
           </div>
           <div class="info-row">
-            <span class="label">Tipo de Usuario:</span>
-            <span class="value user-type">{{ order.user.type === 'admin' ? 'Administrador' : 'Usuario' }}</span>
+            <span class="label">{{ 'app.orderDetails.userTypeLabel' | translate }}:</span>
+            <span class="value user-type">{{ order.user.type === 'admin' ? 'app.orderDetails.admin' :
+              'app.orderDetails.user' |
+              translate }}</span>
           </div>
         </div>
       </div>
@@ -117,8 +122,8 @@
   <!-- Products Section -->
   <div class="products-section">
     <div class="section-header">
-      <h2>Productos en la Orden</h2>
-      <span class="product-count">{{ totalProducts }} productos</span>
+      <h2>{{ 'app.orderDetails.productsInOrderTitle' | translate }}</h2>
+      <span class="product-count">{{ totalProducts }} {{ 'app.orderDetails.products' | translate }}</span>
     </div>
 
     <div class="products-grid" *ngIf="order.products && order.products.length > 0">
@@ -127,7 +132,7 @@
           <h4 class="product-name">{{ product.name }}</h4>
           <p class="product-description">{{ product.desc }}</p>
           <div class="product-meta">
-            <span class="product-page">{{ product.pageName }} - Página {{ product.pageIndex }}</span>
+            <span class="product-page"> {{ 'app.orderDetails.page' | translate }} {{ product.pageIndex }}</span>
           </div>
         </div>
         <div class="product-price">
@@ -138,46 +143,47 @@
 
     <div class="no-products" *ngIf="!order.products || order.products.length === 0">
       <div class="no-products-icon">📦</div>
-      <p>No hay productos en esta orden</p>
+      <p>{{ 'app.orderDetails.noProductsInOrder' | translate }}</p>
     </div>
   </div>
 
   <!-- Order Timeline (Optional) -->
   <div class="order-timeline">
     <div class="section-header">
-      <h2>Historial de la Orden</h2>
+      <h2>{{ 'app.orderDetails.orderHistoryTitle' | translate }}</h2>
     </div>
     <div class="timeline">
       <div class="timeline-item">
         <div class="timeline-marker created"></div>
         <div class="timeline-content">
-          <h4>Orden Creada</h4>
+          <h4>{{ 'app.orderDetails.orderCreatedTitle' | translate }}</h4>
           <p>{{ order.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}</p>
         </div>
       </div>
       <div class="timeline-item" [ngClass]="{'active': order.status !== 'pending'}">
         <div class="timeline-marker processing"></div>
         <div class="timeline-content">
-          <h4>En Procesamiento</h4>
-          <p *ngIf="order.status === 'processing'">Procesando orden...</p>
-          <p *ngIf="order.status !== 'processing'">Pendiente</p>
+          <h4>{{ 'app.orderDetails.processingOrderTitle' | translate }}</h4>
+          <p *ngIf="order.status === 'processing'">{{ 'app.orderDetails.processingOrder' | translate }}</p>
+          <p *ngIf="order.status !== 'processing'">{{ 'app.orderDetails.pending' | translate }}</p>
         </div>
       </div>
       <div class="timeline-item" [ngClass]="{'active': order.status === 'shipped' || order.status === 'delivered'}">
         <div class="timeline-marker shipped"></div>
         <div class="timeline-content">
-          <h4>Enviado</h4>
-          <p *ngIf="order.status === 'shipped'">Producto en camino</p>
-          <p *ngIf="order.status === 'delivered'">Entregado</p>
-          <p *ngIf="order.status !== 'shipped' && order.status !== 'delivered'">Pendiente</p>
+          <h4>{{ 'app.orderDetails.shippedOrderTitle' | translate }}</h4>
+          <p *ngIf="order.status === 'shipped'">{{ 'app.orderDetails.productOnTheWay' | translate }}</p>
+          <p *ngIf="order.status === 'delivered'">{{ 'app.orderDetails.delivered' | translate }}</p>
+          <p *ngIf="order.status !== 'shipped' && order.status !== 'delivered'">{{ 'app.orderDetails.pending' |
+            translate }}</p>
         </div>
       </div>
       <div class="timeline-item" [ngClass]="{'active': order.status === 'delivered'}">
         <div class="timeline-marker delivered"></div>
         <div class="timeline-content">
-          <h4>Entregado</h4>
-          <p *ngIf="order.status === 'delivered'">Orden completada</p>
-          <p *ngIf="order.status !== 'delivered'">Pendiente</p>
+          <h4>{{ 'app.orderDetails.deliveredOrderTitle' | translate }}</h4>
+          <p *ngIf="order.status === 'delivered'">{{ 'app.orderDetails.orderCompleted' | translate }}</p>
+          <p *ngIf="order.status !== 'delivered'">{{ 'app.orderDetails.pending' | translate }}</p>
         </div>
       </div>
     </div>
@@ -187,15 +193,15 @@
 <!-- Loading State -->
 <div class="loading-container" *ngIf="loading">
   <div class="loading-spinner"></div>
-  <p>Cargando detalles de la orden...</p>
+  <p>{{ 'app.orderDetails.loadingOrderDetails' | translate }}</p>
 </div>
 
 <!-- Error State -->
 <div class="error-container" *ngIf="error && !loading">
   <div class="error-icon">⚠️</div>
-  <h3>Error al cargar la orden</h3>
+  <h3>{{ 'app.orderDetails.errorLoadingOrderDetails' | translate }}</h3>
   <p>{{ error }}</p>
   <button class="btn btn-primary" (click)="goBackToOrders()">
-    Volver a Órdenes
+    {{ 'app.orderDetails.backToOrders' | translate }}
   </button>
 </div>

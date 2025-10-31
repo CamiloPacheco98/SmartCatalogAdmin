@@ -1,17 +1,17 @@
 <div class="users-container">
   <!-- Header -->
   <div class="users-header">
-    <h1>Gestión de Usuarios</h1>
+    <h1>{{ 'app.users.title' | translate }}</h1>
     <button class="refresh-btn" (click)="loadUsers()" [disabled]="loading">
       <i class="refresh-icon">🔄</i>
-      Actualizar
+      {{ 'app.users.refresh' | translate }}
     </button>
   </div>
 
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="loading-spinner"></div>
-    <p>Cargando usuarios...</p>
+    <p>{{ 'app.users.loading' | translate }}</p>
   </div>
 
   <!-- Error State -->
@@ -20,7 +20,7 @@
       <i class="error-icon">⚠️</i>
       {{ error }}
     </div>
-    <button class="retry-btn" (click)="loadUsers()">Reintentar</button>
+    <button class="retry-btn" (click)="loadUsers()">{{ 'app.users.retry' | translate }}</button>
   </div>
 
   <!-- Users Grid -->
@@ -36,19 +36,19 @@
       <div class="user-info">
         <h3 class="user-name">{{ `${user.name} ${user.lastName}`.trim() }}</h3>
         <p class="user-email">{{ user.email }}</p>
-        <p class="user-document">Documento: {{ user.documentNumber }}</p>
+        <p class="user-document">{{ 'app.users.documentNumber' | translate }}: {{ user.documentNumber }}</p>
         <p class="user-created">
           <i class="date-icon">📅</i>
-          Creado: {{ user.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}
+          {{ 'app.users.created' | translate }}: {{ user.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}
         </p>
       </div>
 
       <!-- Verification Status -->
       <div class="verification-section">
         <div class="status-container">
-          <span class="status-label">Estado:</span>
+          <span class="status-label">{{ 'app.users.status' | translate }}:</span>
           <span class="status-badge" [class]="user.verified ? 'status-verified' : 'status-unverified'">
-            {{ user.verified ? 'Verificado' : 'No verificado' }}
+            {{ user.verified ? ( 'app.users.verified' | translate ) : ( 'app.users.unverified' | translate ) }}
           </span>
         </div>
 
@@ -58,22 +58,22 @@
             <label class="radio-option">
               <input type="radio" name="status-{{ user.id }}" [value]="true"
                 [(ngModel)]="tempVerificationStatus[user.id]" />
-              <span class="radio-label verified">Verificado</span>
+              <span class="radio-label verified">{{ 'app.users.verified' | translate }}</span>
             </label>
             <label class="radio-option">
               <input type="radio" name="status-{{ user.id }}" [value]="false"
                 [(ngModel)]="tempVerificationStatus[user.id]" />
-              <span class="radio-label unverified">No verificado</span>
+              <span class="radio-label unverified">{{ 'app.users.unverified' | translate }}</span>
             </label>
           </div>
           <div class="edit-actions">
             <button class="btn btn-success" (click)="updateUserStatus(user)" [disabled]="loading">
               <i class="btn-icon">✓</i>
-              Actualizar
+              {{ 'app.users.update' | translate }}
             </button>
             <button class="btn btn-secondary" (click)="cancelEditing(user)">
               <i class="btn-icon">✕</i>
-              Cancelar
+              {{ 'app.users.cancel' | translate }}
             </button>
           </div>
         </div>
@@ -82,7 +82,7 @@
         <div *ngIf="editingUser !== user.id" class="view-mode">
           <button class="btn btn-primary edit-btn" (click)="startEditing(user)">
             <i class="btn-icon">✏️</i>
-            Editar Estado
+            {{ 'app.users.editStatus' | translate }}
           </button>
         </div>
       </div>
@@ -92,7 +92,7 @@
   <!-- Empty State -->
   <div *ngIf="!loading && !error && users.length === 0" class="empty-state">
     <div class="empty-icon">👥</div>
-    <h3>No hay usuarios registrados</h3>
-    <p>Los usuarios aparecerán aquí una vez que se registren en la plataforma.</p>
+    <h3>{{ 'app.users.empty.title' | translate }}</h3>
+    <p>{{ 'app.users.empty.description' | translate }}</p>
   </div>
 </div>

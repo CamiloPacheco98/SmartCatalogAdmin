@@ -10,28 +10,28 @@
 <div class="login-container">
   <div class="login-card">
     <div class="login-body">
-      <h2>Iniciar Sesión</h2>
-      <p>Accede a tu cuenta</p>
+      <h2>{{ 'app.auth.login.title' | translate }}</h2>
+      <p>{{ 'app.auth.login.subtitle' | translate }}</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ 'app.auth.login.email' | translate }}</label>
         <input type="email" id="email" formControlName="email" placeholder="tu@email.com"
           [class.error]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" />
         <div class="error-message" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
-          <span *ngIf="loginForm.get('email')?.errors?.['required']">El email es requerido</span>
-          <span *ngIf="loginForm.get('email')?.errors?.['email']">Ingresa un email válido</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">{{ 'app.auth.login.email.required' | translate }}</span>
+          <span *ngIf="loginForm.get('email')?.errors?.['email']">{{ 'app.auth.login.email.invalid' | translate }}</span>
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Contraseña</label>
+        <label for="password">{{ 'app.auth.login.password' | translate }}</label>
         <input type="password" id="password" formControlName="password" placeholder="Tu contraseña"
           [class.error]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" />
         <div class="error-message" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
-          <span *ngIf="loginForm.get('password')?.errors?.['required']">La contraseña es requerida</span>
-          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Mínimo 6 caracteres</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['required']">{{ 'app.auth.login.password.required' | translate }}</span>
+          <span *ngIf="loginForm.get('password')?.errors?.['minlength']">{{ 'app.auth.login.password.minlength' | translate }}</span>
         </div>
       </div>
 
@@ -40,8 +40,8 @@
       </div>
 
       <button type="submit" class="login-button" [disabled]="loginForm.invalid || loading">
-        <span *ngIf="!loading">Iniciar Sesión</span>
-        <span *ngIf="loading">Cargando...</span>
+        <span *ngIf="!loading">{{ 'app.auth.login.button.login' | translate }}</span>
+        <span *ngIf="loading">{{ 'app.auth.login.button.loading' | translate }}</span>
       </button>
     </form>
   </div>

@@ -9,13 +9,14 @@ import { Router } from "@angular/router";
 import { CommonModule } from "@angular/common";
 import { AuthService } from "../../../../core/services/auth.service";
 import { FirestoreService } from "../../../../core/services/firestore.service";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 
 @Component({
   selector: "app-login",
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.css"],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
 })
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private firestoreService: FirestoreService
+    private firestoreService: FirestoreService,
+    private translate: TranslateService
   ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
@@ -34,7 +36,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   async onSubmit(): Promise<void> {
     if (this.loginForm.valid) {
@@ -48,11 +50,11 @@ export class LoginComponent implements OnInit {
         if (userInfo.isAdmin()) {
           this.router.navigate(["/dashboard"]);
         } else {
-          this.errorMessage = "No tienes permisos para acceder a esta aplicación";
+          this.errorMessage = this.translate.instant('app.auth.login.error.noPermissions');
         }
       } catch (error) {
         this.errorMessage =
-          error instanceof Error ? error.message : "Ocurrió un error desconocido";
+          error instanceof Error ? error.message : this.translate.instant('app.auth.login.error.message');
       } finally {
         this.loading = false;
       }

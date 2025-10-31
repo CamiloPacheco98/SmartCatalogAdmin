@@ -1,0 +1,188 @@
+{
+  "app": {
+    "footer": {
+      "copyright": "© 2025 Smart Catalog Admin. Todos los derechos reservados."
+    },
+    "auth": {
+      "login": {
+        "title": "Iniciar Sesión",
+        "subtitle": "Accede a tu cuenta",
+        "email": "Email",
+        "email.required": "El email es requerido",
+        "email.invalid": "Ingresa un email válido",
+        "password": "Contraseña",
+        "password.required": "La contraseña es requerida",
+        "password.minlength": "Mínimo 6 caracteres",
+        "button.login": "Iniciar Sesión",
+        "button.loading": "Iniciando sesión...",
+        "error": {
+          "message": "Ocurrió un error desconocido",
+          "noPermissions": "No tienes permisos para acceder a esta aplicación",
+          "tooManyRequests": "Demasiados intentos fallidos. Intenta nuevamente más tarde",
+          "invalidCredentials": "Credenciales inválidas",
+          "auth": "Error de autenticación"
+        }
+      }
+    },
+    "sidebar": {
+      "home": "Inicio",
+      "orders": "Pedidos",
+      "users": "Usuarios"
+    },
+    "home": {
+      "sendSigninLink": {
+        "title": "Enviar Link de Inicio de Sesión",
+        "subtitle": "Envía un link de inicio de sesión seguro a otro usuario",
+        "email": "Email del usuario",
+        "email.placeholder": "Ingresa el email del usuario",
+        "success": "Link de inicio de sesión enviado correctamente!",
+        "button": "Enviar Link de Inicio de Sesión",
+        "button.loading": "Enviando...",
+        "loading": "Generando y enviando link de inicio de sesión...",
+        "error": {
+          "pleaseFillAllFields": "Por favor completa todos los campos requeridos",
+          "pleaseLogin": "Por favor inicia sesión para enviar un link de inicio de sesión",
+          "message": "Error al enviar el link de inicio de sesión, por favor intenta nuevamente"
+        }
+      },
+      "uploadPdf": {
+        "title": "Cargar Documento PDF",
+        "subtitle": "Selecciona un archivo PDF para cargar al catálogo",
+        "maxSize": "Tamaño máximo: 25MB",
+        "loading": "Cargando PDF...",
+        "success": "PDF cargado correctamente!",
+        "button": {
+          "upload": "Cargar PDF",
+          "loading": "Cargando...",
+          "browse": "Haz clic para buscar",
+          "or": "o arrastra y suelta tu archivo PDF aquí"
+        },
+        "error": {
+          "pleaseSelectValidPdfFile": "Por favor selecciona un archivo PDF válido.",
+          "fileSizeMustBeLessThan25MB": "El tamaño del archivo debe ser menor a 25MB.",
+          "errorUploadingFile": "Error al cargar el archivo. Por favor intenta nuevamente.",
+          "failedToAnalyzePDF": "Error al analizar el PDF",
+          "failedToProcessProductData": "Error al procesar los datos de productos: ${error.message}"
+        },
+        "uploadingPdfToCloud": "Cargando PDF en la nube...",
+        "analyzingPdf": "Analizando PDF...",
+        "processingPage": "Procesando página"
+      },
+      "uploadJson": {
+        "title": "Cargar Catálogo de Productos (JSON)",
+        "subtitle": "Selecciona un archivo JSON con información de productos para el catálogo",
+        "maxSize": "Tamaño máximo: 25MB",
+        "valid": "JSON válido con datos de productos",
+        "success": "Catálogo de productos cargado correctamente!",
+        "button": {
+          "upload": "Cargar JSON",
+          "loading": "Cargando...",
+          "browse": "Haz clic para buscar",
+          "or": "o arrastra y suelta tu archivo JSON aquí"
+        },
+        "error": {
+          "pleaseSelectValidJsonFile": "Por favor selecciona un archivo JSON válido.",
+          "fileSizeMustBeLessThan10MB": "El tamaño del archivo debe ser menor a 10MB.",
+          "errorUploadingFile": "Error al cargar el archivo. Por favor intenta nuevamente.",
+          "invalidJsonFormat": "Formato JSON inválido. Por favor verifica tu archivo.",
+          "jsonDoesNotContainValidProductData": "El archivo JSON no contiene datos de productos válidos. El formato esperado es: {enrichments: [...]} o {products: [...]} o array de productos",
+          "noValidProductsFound": "No se encontraron productos válidos en el archivo JSON",
+          "failedToProcessProductData": "Error al procesar los datos de productos:",
+          "invalidJsonStructure": "Estructura JSON inválida",
+          "noValidProductData": "No se encontraron datos de productos válidos. El formato esperado es: {enrichments: [...]} o {products: [...]} o array de productos"
+        }
+      }
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "refresh": "Refrescar",
+      "loading": "Cargando usuarios...",
+      "retry": "Reintentar",
+      "documentNumber": "Número de Documento",
+      "created": "Creado",
+      "status": "Estado",
+      "verified": "Verificado",
+      "unverified": "No verificado",
+      "update": "Actualizar",
+      "cancel": "Cancelar",
+      "editStatus": "Editar Estado",
+      "empty": {
+        "title": "No se encontraron usuarios",
+        "description": "Los usuarios aparecerán aquí una vez que se registren en la plataforma."
+      },
+      "error": {
+        "loadingUsers": "Error al cargar los usuarios",
+        "updatingUserStatus": "Error al actualizar el estado del usuario"
+      }
+    },
+    "orders": {
+      "title": "Gestión de Órdenes",
+      "totalOrders": "Total de Órdenes",
+      "delivered": "Entregado",
+      "pending": "Pendiente",
+      "orderIdLabel": "ID de la Orden",
+      "productsTitle": "Productos",
+      "createdLabel": "Creado",
+      "totalLabel": "Total",
+      "viewDetails": "Ver Detalles",
+      "process": "Procesar",
+      "ship": "Enviar",
+      "noOrdersYet": "No hay órdenes",
+      "newOrdersWillShowUpHereAsSoonAsCustomersPlaceThem": "Las órdenes aparecerán aquí una vez que los clientes las coloquen.",
+      "error": {
+        "loadingOrders": "Error al cargar las órdenes"
+      },
+      "status": {
+        "pending": "Pendiente",
+        "processing": "Procesando",
+        "shipped": "Enviado",
+        "delivered": "Entregado",
+        "cancelled": "Cancelado",
+        "unknown": "Desconocido"
+      }
+    },
+    "orderDetails": {
+      "backToOrders": "Volver a Órdenes",
+      "orderDetailsTitle": "Detalles de la Orden",
+      "orderSummaryTitle": "Resumen de la Orden",
+      "hideProducts": "Ocultar Productos",
+      "viewProducts": "Ver Productos",
+      "createdLabel": "Creado",
+      "totalProductsLabel": "Total de Productos",
+      "subtotalLabel": "Subtotal",
+      "totalLabel": "Total",
+      "productsBreakdownTitle": "Detalle de Productos",
+      "page": "Página",
+      "quantity": "Cantidad",
+      "unitPrice": "c/u",
+      "customerInformationTitle": "Información del Cliente",
+      "nameLabel": "Nombre",
+      "emailLabel": "Email",
+      "documentNumberLabel": "Número de Documento",
+      "verifiedLabel": "Verificado",
+      "yes": "Sí",
+      "no": "No",
+      "userTypeLabel": "Tipo de Usuario",
+      "admin": "Admin",
+      "user": "Usuario",
+      "productsInOrderTitle": "Productos en la Orden",
+      "products": "productos",
+      "noProductsInOrder": "No hay productos en la orden",
+      "orderHistoryTitle": "Historial de Órdenes",
+      "orderCreatedTitle": "Orden Creada",
+      "processingOrderTitle": "Orden en Procesamiento",
+      "shippedOrderTitle": "Orden Enviada",
+      "deliveredOrderTitle": "Orden Entregada",
+      "orderCompleted": "Orden Completada",
+      "pending": "Pendiente",
+      "productOnTheWay": "Producto en camino",
+      "delivered": "Entregado",
+      "loadingOrderDetails": "Cargando detalles de la orden...",
+      "errorLoadingOrderDetails": "Error al cargar los detalles de la orden",
+      "processingOrder": "Orden en Procesamiento...",
+      "error": {
+        "loadingOrderDetails": "Error al cargar los detalles de la orden"
+      }
+    }
+  }
+}

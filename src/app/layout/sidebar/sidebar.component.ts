@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-sidebar',
@@ -9,28 +10,31 @@ import { CommonModule } from '@angular/common';
     imports: [CommonModule]
 })
 export class SidebarComponent {
-    menuItems = [
-        {
-            label: 'Home',
-            icon: '🏠',
-            route: '/dashboard/home',
-            active: true
-        },
-        {
-            label: 'Orders',
-            icon: '🛒',
-            route: '/dashboard/orders',
-            active: false
-        },
-        {
-            label: 'Users',
-            icon: '👤',
-            route: '/dashboard/users',
-            active: false
-        }
-    ];
 
-    constructor(private router: Router) { }
+    menuItems: any[] = [];
+
+    constructor(private router: Router, private translate: TranslateService) {
+        this.menuItems = [
+            {
+                label: this.translate.instant('app.sidebar.home'),
+                icon: '🏠',
+                route: '/dashboard/home',
+                active: true
+            },
+            {
+                label: this.translate.instant('app.sidebar.orders'),
+                icon: '🛒',
+                route: '/dashboard/orders',
+                active: false
+            },
+            {
+                label: this.translate.instant('app.sidebar.users'),
+                icon: '👤',
+                route: '/dashboard/users',
+                active: false
+            }
+        ];
+    }
 
     navigateTo(route: string) {
         this.router.navigate([route]);

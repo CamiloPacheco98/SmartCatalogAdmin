@@ -3,11 +3,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { OrderModel } from '../../../../../core/models/order.model';
 import { ProductModel } from '../../../../../core/models/product.model';
-
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-order-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslatePipe],
   templateUrl: './order-details.component.html',
   styleUrls: ['./order-details.component.css']
 })
@@ -22,7 +22,7 @@ export class OrderDetailsComponent implements OnInit {
 
   constructor(
     private router: Router,
-
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -39,7 +39,7 @@ export class OrderDetailsComponent implements OnInit {
       this.subtotal = this.getSubtotal();
     } catch (error) {
       console.error('Error loading order:', error);
-      this.error = 'Error al cargar los detalles de la orden';
+      this.error = this.translate.instant('app.orders.error.loadingOrderDetails');
     } finally {
       this.loading = false;
     }

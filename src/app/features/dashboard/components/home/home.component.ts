@@ -3,16 +3,16 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { StorageService } from "../../../../core/services/storage.service";
 import { PdfCoService } from "../../../../core/services/pdf-co.service";
+import { TranslatePipe, TranslateService } from "@ngx-translate/core";
 import {
   FirestoreService,
-  Product,
 } from "../../../../core/services/firestore.service";
 import { AuthService } from "../../../../core/services/auth.service";
 
 @Component({
   selector: "app-home",
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TranslatePipe],
   templateUrl: "./home.component.html",
   styleUrls: ["./home.component.css"],
 })
@@ -48,7 +48,8 @@ export class HomeComponent implements OnInit {
     private storageService: StorageService,
     private pdfCoService: PdfCoService,
     private firestoreService: FirestoreService,
-    private authService: AuthService
+    private authService: AuthService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -90,14 +91,14 @@ export class HomeComponent implements OnInit {
 
     // Validate file type
     if (file.type !== "application/pdf") {
-      this.uploadError = "Please select a valid PDF file.";
+      this.uploadError = this.translate.instant('app.home.uploadPdf.error.pleaseSelectValidPdfFile');
       return;
     }
 
     // Validate file size (25MB limit)
     const maxSize = 25 * 1024 * 1024; // 25MB in bytes
     if (file.size > maxSize) {
-      this.uploadError = "File size must be less than 25MB.";
+      this.uploadError = this.translate.instant('app.home.uploadPdf.error.fileSizeMustBeLessThan25MB');
       return;
     }
 
@@ -162,7 +163,7 @@ export class HomeComponent implements OnInit {
       console.error("Error uploading file:", error);
       this.isUploading = false;
       this.uploadProgress = "";
-      this.uploadError = "Error uploading file. Please try again.";
+      this.uploadError = this.translate.instant('app.home.uploadPdf.error.errorUploadingFile');
     }
   }
 
@@ -176,20 +177,20 @@ export class HomeComponent implements OnInit {
   ): Promise<string[]> {
     try {
       // Step 1: Upload PDF to PDF.co
-      this.uploadProgress = "Uploading PDF to cloud...";
+      this.uploadProgress = this.translate.instant('app.home.uploadPdf.uploadingPdfToCloud');
       console.log("Uploading PDF to PDF.co...");
       const pdfUrl = await this.pdfCoService.uploadFile(pdfFile);
       console.log("PDF uploaded to:", pdfUrl);
 
       // Step 2: Get total page count by converting first page
-      this.uploadProgress = "Analyzing PDF...";
+      this.uploadProgress = this.translate.instant('app.home.uploadPdf.analyzingPdf');
       const firstPageResponse = await this.pdfCoService.convertPdfToImages(
         pdfUrl,
         "0"
       );
 
       if (firstPageResponse.error || !firstPageResponse.urls) {
-        throw new Error(firstPageResponse.message || "Failed to analyze PDF");
+        throw new Error(firstPageResponse.message || this.translate.instant('app.home.uploadPdf.error.failedToAnalyzePDF'));
       }
 
       // Get page count from PDF.co (we need to make multiple requests to get total)
@@ -199,7 +200,7 @@ export class HomeComponent implements OnInit {
       const downloadUrls: string[] = [];
 
       // Process first page
-      this.uploadProgress = `Processing page 1...`;
+      this.uploadProgress = this.translate.instant('app.home.uploadPdf.processingPage') + '1...';
       const firstImageUrl = firstPageResponse.urls[0];
       const firstImageResponse = await fetch(firstImageUrl);
       const firstImageBlob = await firstImageResponse.blob();
@@ -219,7 +220,7 @@ export class HomeComponent implements OnInit {
       currentPage = 1;
       while (hasMorePages) {
         const pageNumber = currentPage + 1;
-        this.uploadProgress = `Processing page ${pageNumber}...`;
+        this.uploadProgress = this.translate.instant('app.home.uploadPdf.processingPage') + pageNumber + '...';
 
         try {
           // Convert single page
@@ -325,14 +326,14 @@ export class HomeComponent implements OnInit {
 
     // Validate file type
     if (file.type !== "application/json" && !file.name.endsWith(".json")) {
-      this.jsonUploadError = "Please select a valid JSON file.";
+      this.jsonUploadError = this.translate.instant('app.home.uploadJson.error.pleaseSelectValidJsonFile');
       return;
     }
 
     // Validate file size (10MB limit for JSON)
     const maxSize = 10 * 1024 * 1024; // 10MB in bytes
     if (file.size > maxSize) {
-      this.jsonUploadError = "File size must be less than 10MB.";
+      this.jsonUploadError = this.translate.instant('app.home.uploadJson.error.fileSizeMustBeLessThan10MB');
       return;
     }
 
@@ -351,7 +352,7 @@ export class HomeComponent implements OnInit {
 
       if (!hasValidStructure) {
         this.jsonUploadError =
-          "JSON file does not contain valid product data. Expected structure: {enrichments: [...]} or {products: [...]} or array of products";
+          this.translate.instant('app.home.uploadJson.error.jsonDoesNotContainValidProductData');
         this.selectedJsonFile = null;
         this.jsonFileSize = "";
         return;
@@ -360,7 +361,7 @@ export class HomeComponent implements OnInit {
       this.jsonData = json;
       console.log("Valid JSON file loaded with product data:", json);
     } catch (error) {
-      this.jsonUploadError = "Invalid JSON format. Please check your file.";
+      this.jsonUploadError = this.translate.instant('app.home.uploadJson.error.invalidJsonFormat');
       this.selectedJsonFile = null;
       this.jsonFileSize = "";
     }
@@ -425,7 +426,7 @@ export class HomeComponent implements OnInit {
       const processedData = this.processProductData(this.jsonData);
 
       if (!processedData || processedData.length === 0) {
-        throw new Error("No valid products found in the JSON file");
+        throw new Error(this.translate.instant('app.home.uploadJson.error.noValidProductsFound'));
       }
 
       // Create a unique catalog ID for this JSON upload
@@ -464,7 +465,7 @@ export class HomeComponent implements OnInit {
       this.jsonUploadError =
         error instanceof Error
           ? error.message
-          : "Error uploading file. Please try again.";
+          : this.translate.instant('app.home.uploadJson.error.errorUploadingFile');
     }
   }
 
@@ -475,7 +476,7 @@ export class HomeComponent implements OnInit {
     try {
       // Check if the data has the expected structure
       if (!jsonData || typeof jsonData !== "object") {
-        throw new Error("Invalid JSON structure");
+        throw new Error(this.translate.instant('app.home.uploadJson.error.invalidJsonStructure'));
       }
 
       // Handle different possible data structures
@@ -489,7 +490,7 @@ export class HomeComponent implements OnInit {
         enrichments = jsonData.products;
       } else {
         throw new Error(
-          "No valid product data found. Expected structure: {enrichments: [...]} or {products: [...]} or array of products"
+          this.translate.instant('app.home.uploadJson.error.noValidProductData')
         );
       }
 
@@ -525,8 +526,7 @@ export class HomeComponent implements OnInit {
     } catch (error) {
       console.error("Error processing product data:", error);
       throw new Error(
-        `Failed to process product data: ${error instanceof Error ? error.message : "Unknown error"
-        }`
+        this.translate.instant('app.home.uploadJson.error.failedToProcessProductData') + (error instanceof Error ? error.message : "Unknown error")
       );
     }
   }
@@ -561,7 +561,7 @@ export class HomeComponent implements OnInit {
   // Sign-in Link Methods
   async sendSigninLink(): Promise<void> {
     if (!this.signinEmail) {
-      this.signinError = "Please fill in all required fields.";
+      this.signinError = this.translate.instant('app.home.sendSigninLink.error.pleaseFillAllFields');
       return;
     }
 
@@ -572,7 +572,7 @@ export class HomeComponent implements OnInit {
       const currentUser = this.authService.getCurrentUser();
 
       if (!currentUser?.uid) {
-        this.signinError = "Please login to send a sign-in link.";
+        this.signinError = this.translate.instant('app.home.sendSigninLink.error.pleaseLogin');
         return;
       }
 
@@ -598,7 +598,7 @@ export class HomeComponent implements OnInit {
       this.signinError =
         error instanceof Error
           ? error.message
-          : "Error sending sign-in link. Please try again.";
+          : this.translate.instant('app.home.sendSigninLink.error.message');
     }
   }
 

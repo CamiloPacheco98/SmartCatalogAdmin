@@ -5,13 +5,14 @@ import { FirestoreService } from '../../../../core/services/firestore.service';
 import { StorageService } from '../../../../core/services/storage.service';
 import { User } from '../../../../core/models/user.model';
 import { AuthService } from '../../../../core/services/auth.service';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, TranslatePipe]
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
@@ -23,7 +24,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private firestoreService: FirestoreService,
     private authService: AuthService,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private translate: TranslateService
   ) { }
 
   async ngOnInit() {
@@ -49,7 +51,7 @@ export class UsersComponent implements OnInit {
       }
     } catch (error) {
       console.error('Error loading users:', error);
-      this.error = 'Error al cargar los usuarios';
+      this.error = this.translate.instant('app.users.error.loadingUsers');
     } finally {
       this.loading = false;
     }
@@ -82,7 +84,7 @@ export class UsersComponent implements OnInit {
 
     } catch (error) {
       console.error('Error updating user status:', error);
-      this.error = 'Error al actualizar el estad  o del usuario';
+      this.error = this.translate.instant('app.users.error.updatingUserStatus');
     }
   }
 }

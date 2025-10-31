@@ -1,0 +1,188 @@
+{
+  "app": {
+    "footer": {
+      "copyright": "© 2025 Smart Catalog Admin. All rights reserved."
+    },
+    "auth": {
+      "login": {
+        "title": "Login",
+        "subtitle": "Access your account",
+        "email": "Email",
+        "email.required": "Email is required",
+        "email.invalid": "Enter a valid email",
+        "password": "Password",
+        "password.required": "Password is required",
+        "password.minlength": "Minimum 6 characters",
+        "button.login": "Login",
+        "button.loading": "Logging in...",
+        "error": {
+          "message": "An unknown error occurred",
+          "noPermissions": "You do not have permission to access this application",
+          "tooManyRequests": "Too many requests. Try again later",
+          "invalidCredentials": "Invalid credentials",
+          "auth": "Authentication error"
+        }
+      }
+    },
+    "sidebar": {
+      "home": "Home",
+      "orders": "Orders",
+      "users": "Users"
+    },
+    "home": {
+      "sendSigninLink": {
+        "title": "Send Sign-in Link",
+        "subtitle": "Send a secure sign-in link to another user",
+        "email": "User Email",
+        "email.placeholder": "Enter user's email address",
+        "success": "Sign-in link sent successfully!",
+        "button": "Send Sign-in Link",
+        "button.loading": "Sending...",
+        "loading": "Generating and sending sign-in link...",
+        "error": {
+          "pleaseFillAllFields": "Please fill all required fields",
+          "pleaseLogin": "Please login to send a sign-in link",
+          "message": "Error sending sign-in link, please try again"
+        }
+      },
+      "uploadPdf": {
+        "title": "Upload PDF Document",
+        "subtitle": "Select a PDF file to upload to the catalog",
+        "maxSize": "Maximum file size: 25MB",
+        "loading": "Uploading PDF...",
+        "success": "PDF uploaded successfully!",
+        "button": {
+          "upload": "Upload PDF",
+          "loading": "Uploading...",
+          "browse": "Click to browse",
+          "or": "or drag and drop your PDF file here"
+        },
+        "error": {
+          "pleaseSelectValidPdfFile": "Please select a valid PDF file.",
+          "fileSizeMustBeLessThan25MB": "File size must be less than 25MB.",
+          "errorUploadingFile": "Error uploading file. Please try again.",
+          "failedToAnalyzePDF": "Failed to analyze PDF",
+          "failedToProcessProductData": "Failed to process product data: ${error.message}"
+        },
+        "uploadingPdfToCloud": "Uploading PDF to cloud...",
+        "analyzingPdf": "Analyzing PDF...",
+        "processingPage": "Processing page"
+      },
+      "uploadJson": {
+        "title": "Upload Product Catalog (JSON)",
+        "subtitle": "Select a JSON file with product information for the catalog",
+        "maxSize": "Maximum file size: 25MB",
+        "valid": "Valid JSON with product data",
+        "success": "JSON catalog uploaded successfully!",
+        "button": {
+          "upload": "Upload JSON",
+          "loading": "Uploading...",
+          "browse": "Click to browse",
+          "or": "or drag and drop your JSON file here"
+        },
+        "error": {
+          "pleaseSelectValidJsonFile": "Please select a valid JSON file.",
+          "fileSizeMustBeLessThan10MB": "File size must be less than 10MB.",
+          "errorUploadingFile": "Error uploading file. Please try again.",
+          "invalidJsonFormat": "Invalid JSON format. Please check your file.",
+          "jsonDoesNotContainValidProductData": "JSON file does not contain valid product data. Expected structure: {enrichments: [...]} or {products: [...]} or array of products",
+          "noValidProductsFound": "No valid products found in the JSON file",
+          "failedToProcessProductData": "Failed to process product data:",
+          "invalidJsonStructure": "Invalid JSON structure",
+          "noValidProductData": "No valid product data found. Expected structure: {enrichments: [...]} or {products: [...]} or array of products"
+        }
+      }
+    },
+    "users": {
+      "title": "Users Management",
+      "refresh": "Refresh",
+      "loading": "Loading users...",
+      "retry": "Retry",
+      "documentNumber": "Document Number",
+      "created": "Created",
+      "status": "Status",
+      "verified": "Verified",
+      "unverified": "Unverified",
+      "update": "Update",
+      "cancel": "Cancel",
+      "editStatus": "Edit Status",
+      "empty": {
+        "title": "No users found",
+        "description": "Users will appear here once they register on the platform."
+      },
+      "error": {
+        "loadingUsers": "Error loading users",
+        "updatingUserStatus": "Error updating user status"
+      }
+    },
+    "orders": {
+      "title": "Orders Management",
+      "totalOrders": "Total Orders",
+      "delivered": "Delivered",
+      "pending": "Pending",
+      "orderIdLabel": "Order ID",
+      "productsTitle": "Products",
+      "createdLabel": "Created",
+      "totalLabel": "Total",
+      "viewDetails": "View Details",
+      "process": "Process",
+      "ship": "Ship",
+      "noOrdersYet": "No orders yet",
+      "newOrdersWillShowUpHereAsSoonAsCustomersPlaceThem": "New orders will show up here as soon as customers place them.",
+      "error": {
+        "loadingOrders": "Error loading orders"
+      },
+      "status": {
+        "pending": "Pending",
+        "processing": "Processing",
+        "shipped": "Shipped",
+        "delivered": "Delivered",
+        "cancelled": "Cancelled",
+        "unknown": "Unknown"
+      }
+    },
+    "orderDetails": {
+      "backToOrders": "Back to Orders",
+      "orderDetailsTitle": "Order Details",
+      "orderSummaryTitle": "Order Summary",
+      "hideProducts": "Hide Products",
+      "viewProducts": "View Products",
+      "createdLabel": "Created",
+      "totalProductsLabel": "Total Products",
+      "subtotalLabel": "Subtotal",
+      "totalLabel": "Total",
+      "productsBreakdownTitle": "Products Breakdown",
+      "page": "Page",
+      "quantity": "Quantity",
+      "unitPrice": "per unit",
+      "customerInformationTitle": "Customer Information",
+      "nameLabel": "Name",
+      "emailLabel": "Email",
+      "documentNumberLabel": "Document Number",
+      "verifiedLabel": "Verified",
+      "yes": "Yes",
+      "no": "No",
+      "userTypeLabel": "User Type",
+      "admin": "Admin",
+      "user": "User",
+      "productsInOrderTitle": "Products in Order",
+      "products": "products",
+      "noProductsInOrder": "No products in order",
+      "orderHistoryTitle": "Order History",
+      "orderCreatedTitle": "Order Created",
+      "processingOrderTitle": "Processing Order",
+      "shippedOrderTitle": "Shipped Order",
+      "deliveredOrderTitle": "Delivered Order",
+      "orderCompleted": "Order Completed",
+      "pending": "Pending",
+      "productOnTheWay": "Product on the way",
+      "delivered": "Delivered",
+      "loadingOrderDetails": "Loading order details...",
+      "errorLoadingOrderDetails": "Error loading order details",
+      "processingOrder": "Processing Order...",
+      "error": {
+        "loadingOrderDetails": "Error loading order details"
+      }
+    }
+  }
+}
