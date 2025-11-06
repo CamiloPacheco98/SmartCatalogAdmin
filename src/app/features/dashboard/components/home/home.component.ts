@@ -121,33 +121,18 @@ export class HomeComponent implements OnInit {
     this.clearMessages();
 
     try {
-      // Save reference to file name before processing
-      const originalFileName = this.selectedFile.name;
-
-      // Create unique identifier for this catalog
-      const catalogId = `catalog_${Date.now()}`;
-      const catalogName = originalFileName.replace(".pdf", "");
-
       // Process and upload page by page for better performance and progress tracking
       const downloadUrls = await this.processAndUploadPageByPage(
-        this.selectedFile,
-        catalogId,
-        catalogName
+        this.selectedFile
       );
 
       console.log("Uploaded catalog pages:", {
-        catalogId,
-        catalogName,
         totalPages: downloadUrls.length,
         pages: downloadUrls,
       });
 
       // Save catalog metadata with download URLs to Firestore
-      await this.firestoreService.saveCatalogMetadata(
-        catalogId,
-        catalogName,
-        downloadUrls
-      );
+      await this.firestoreService.saveCatalogMetadata(downloadUrls);
 
       this.isUploading = false;
       this.uploadSuccess = true;
@@ -170,11 +155,7 @@ export class HomeComponent implements OnInit {
   /**
    * Process and upload PDF page by page for better performance with large PDFs
    */
-  private async processAndUploadPageByPage(
-    pdfFile: File,
-    catalogId: string,
-    catalogName: string
-  ): Promise<string[]> {
+  private async processAndUploadPageByPage(pdfFile: File): Promise<string[]> {
     try {
       // Step 1: Upload PDF to PDF.co
       this.uploadProgress = this.translate.instant('app.home.uploadPdf.uploadingPdfToCloud');
@@ -204,11 +185,11 @@ export class HomeComponent implements OnInit {
       const firstImageUrl = firstPageResponse.urls[0];
       const firstImageResponse = await fetch(firstImageUrl);
       const firstImageBlob = await firstImageResponse.blob();
-      const firstImageFile = new File([firstImageBlob], `page-1.jpg`, {
+      const firstImageFile = new File([firstImageBlob], `page-01.jpg`, {
         type: "image/jpeg",
       });
 
-      const firstPath = `catalogs/${catalogId}/${catalogName}_page_01.jpg`;
+      const firstPath = `catalog/page_01.jpg`;
       const firstFirebaseUrl = await this.storageService.uploadFile(
         firstImageFile,
         firstPath
@@ -243,14 +224,19 @@ export class HomeComponent implements OnInit {
           const imageUrl = pageResponse.urls[0];
           const imageResponse = await fetch(imageUrl);
           const imageBlob = await imageResponse.blob();
-          const imageFile = new File([imageBlob], `page-${pageNumber}.jpg`, {
-            type: "image/jpeg",
-          });
+          const imageFile = new File(
+            [imageBlob],
+            `page-${String(pageNumber).padStart(2, "0")}.jpg`,
+            {
+              type: "image/jpeg",
+            }
+          );
 
           // Upload to Firebase Storage
-          const path = `catalogs/${catalogId}/${catalogName}_page_${String(
-            pageNumber
-          ).padStart(2, "0")}.jpg`;
+          const path = `catalog/page_${String(pageNumber).padStart(
+            2,
+            "0"
+          )}.jpg`;
           const firebaseUrl = await this.storageService.uploadFile(
             imageFile,
             path
@@ -439,10 +425,7 @@ export class HomeComponent implements OnInit {
       }));
 
       // Save products to Firestore using the new structure
-      await this.firestoreService.saveProductsToCatalog(
-        catalogId,
-        productsWithCatalogId
-      );
+      await this.firestoreService.saveProductsToCatalog(productsWithCatalogId);
 
       console.log("Products saved to Firestore:", {
         productCount: processedData.length,
