@@ -2,11 +2,11 @@ import { Injectable, Inject } from "@angular/core";
 import {
   Firestore,
   collection,
-  addDoc,
   getDocs,
   doc,
   setDoc,
   getDoc,
+  serverTimestamp,
 } from "firebase/firestore";
 import { FIREBASE_FIRESTORE } from "./firebase.providers";
 import { User, UserModel } from "../models/user.model";
@@ -31,34 +31,36 @@ export class FirestoreService {
   constructor(@Inject(FIREBASE_FIRESTORE) private firestore: Firestore) {}
 
   /**
-   * Save products to catalog collection organized by catalogId
-   * @param catalogId - The catalog ID to save products under
-   * @param products - Array of products to save (must include catalogId)
+   * Save products to catalog collection
+   * @param products - Array of products to save
    */
-  async saveProductsToCatalog(
-    catalogId: string,
-    products: Product[]
-  ): Promise<void> {
+  async saveProductsToCatalog(products: Product[]): Promise<void> {
     try {
       // Create a document for this catalog with all its products
-      const catalogDocRef = doc(this.firestore, "catalogs", catalogId);
+      const catalogDocRef = doc(this.firestore, "catalog", "main");
 
+      //TODO: remove createdAt and updatedAt from products, not needed
       const catalogData = {
-        catalogId,
         products: products.map((product) => ({
           ...product,
-          catalogId, // Ensure catalogId is set
           createdAt: new Date(),
           updatedAt: new Date(),
         })),
         totalProducts: products.length,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: serverTimestamp(),
       };
 
-      await setDoc(catalogDocRef, catalogData);
+      const snapshot = await getDoc(catalogDocRef);
+      if (snapshot.exists()) {
+        await setDoc(catalogDocRef, catalogData, { merge: true });
+      } else {
+        await setDoc(catalogDocRef, {
+          ...catalogData,
+          createdAt: serverTimestamp(),
+        });
+      }
 
-      console.log(`Saved ${products.length} products to catalog ${catalogId}`);
+      console.log(`Saved ${products.length} products to catalog`);
     } catch (error) {
       console.error("Error saving products to catalog:", error);
       throw error;
@@ -67,31 +69,26 @@ export class FirestoreService {
 
   /**
    * Save catalog metadata with download URLs
-   * @param catalogId - Unique identifier for the catalog
-   * @param catalogName - Name of the catalog
    * @param downloadUrls - Array of download URLs for the catalog pages
    */
-  async saveCatalogMetadata(
-    catalogId: string,
-    catalogName: string,
-    downloadUrls: string[]
-  ): Promise<void> {
+  async saveCatalogMetadata(downloadUrls: string[]): Promise<void> {
     try {
-      const catalogsCollection = collection(this.firestore, "catalog");
-
+      const catalogDocRef = doc(this.firestore, "catalog", "main");
       const catalogData = {
-        catalogId,
-        catalogName: catalogName,
         downloadUrls,
         totalPages: downloadUrls.length,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        updatedAt: serverTimestamp(),
       };
-
-      await addDoc(catalogsCollection, catalogData);
-      console.log(
-        `Saved catalog metadata for ${catalogName} with ${downloadUrls.length} pages`
-      );
+      const snapshot = await getDoc(catalogDocRef);
+      if (snapshot.exists()) {
+        await setDoc(catalogDocRef, catalogData, { merge: true });
+      } else {
+        await setDoc(catalogDocRef, {
+          ...catalogData,
+          createdAt: serverTimestamp(),
+        });
+      }
+      console.log(`Saved catalog metadata with ${downloadUrls.length} pages`);
     } catch (error) {
       console.error("Error saving catalog metadata:", error);
       throw error;
