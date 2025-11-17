@@ -1,27 +1,37 @@
 .dashboard-container {
   display: flex;
   background-color: var(--secondary-color);
+  min-height: 100vh;
 }
 
 .dashboard-content {
   flex: 1;
-  margin-left: 250px; /* Ancho del sidebar */
+  margin-left: 250px; /* Full sidebar width on large screens */
   padding: var(--spacing-xl);
   background-color: var(--secondary-color);
   transition: margin-left 0.3s ease;
+  min-height: 100vh;
 }
 
-.dashboard-content.sidebar-collapsed {
-  margin-left: 70px; /* Ancho del sidebar colapsado */
-}
-
-@media (max-width: 768px) {
+/* Medium screens (768px to 1023px) - Collapsed sidebar (icons only) */
+@media (min-width: 768px) and (max-width: 1023px) {
   .dashboard-content {
-    margin-left: 200px; /* Ancho del sidebar en móvil */
-    padding: var(--spacing-md);
+    margin-left: 70px; /* Collapsed sidebar width */
   }
-  
-  .dashboard-content.sidebar-collapsed {
-    margin-left: 60px; /* Ancho del sidebar colapsado en móvil */
+}
+
+/* Small screens (< 768px) - Sidebar hidden by default */
+@media (max-width: 767px) {
+  .dashboard-content {
+    margin-left: 0; /* No margin when sidebar is hidden */
+    padding: var(--spacing-md);
+    padding-top: calc(var(--spacing-md) + 50px); /* Add top padding for hamburger menu */
+  }
+}
+
+/* Large screens (≥ 1024px) - Full sidebar */
+@media (min-width: 1024px) {
+  .dashboard-content {
+    margin-left: 250px; /* Full sidebar width */
   }
 }

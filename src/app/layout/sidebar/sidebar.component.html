@@ -1,5 +1,32 @@
+<!-- Hamburger menu button (visible only on mobile) -->
+@if (!isMobileOpen) {
+<button 
+    class="hamburger-menu"
+    (click)="toggleSidebar()"
+    [attr.aria-expanded]="isMobileOpen"
+    [attr.aria-label]="isMobileOpen ? 'Close sidebar' : 'Open sidebar'"
+    type="button">
+    <span class="hamburger-icon">☰</span>
+</button>
+}
+
+<!-- Overlay (visible only on mobile when sidebar is open) -->
+@if (isMobile && isMobileOpen) {
+    <div 
+        class="sidebar-overlay"
+        (click)="closeSidebar()"
+        [attr.aria-hidden]="!isMobileOpen">
+    </div>
+}
+
 <!-- Sidebar wrapper -->
-<aside class="sidebar">
+<aside 
+    class="sidebar"
+    [class.sidebar-open]="isMobileOpen"
+    [class.sidebar-collapsed]="isMediumScreen"
+    [attr.aria-hidden]="isMobile && !isMobileOpen"
+    role="navigation"
+    aria-label="Main navigation">
     <!-- Header section -->
     <div class="sidebar-header">
         <div class="sidebar-logo-section">
@@ -11,7 +38,12 @@
     <!-- Navigation section -->
     <nav class="nav-links">
         @for (menuItem of menuItems; track menuItem.route) {
-        <a class="nav-item" role="button" (click)="navigateTo(menuItem.route)" [ngClass]="{'active': menuItem.active}">
+        <a 
+            class="nav-item" 
+            role="button" 
+            (click)="navigateTo(menuItem.route)" 
+            [ngClass]="{'active': menuItem.active}"
+            [attr.aria-current]="menuItem.active ? 'page' : null">
             <span class="icon">{{menuItem.icon}}</span>
             <span class="nav-label">{{menuItem.label}}</span>
         </a>
