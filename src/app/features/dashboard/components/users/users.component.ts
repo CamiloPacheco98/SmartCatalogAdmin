@@ -43,10 +43,6 @@ export class UsersComponent implements OnInit {
       const currentUid = this._getCurrentUid();
       if (currentUid) {
         const users = await this.firestoreService.getAllUsers(currentUid);
-        users.forEach(async (user) => {
-          const imagePath = await this.storageService.downloadFile(user.imagePath);
-          user.imagePath = imagePath;
-        });
         this.users = users;
       }
     } catch (error) {

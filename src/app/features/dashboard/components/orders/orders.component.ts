@@ -78,7 +78,10 @@ export class OrdersComponent implements OnInit {
 
     applyDiscount(orderId: string): void {
         console.log('DEBUG: Applying discount to order', orderId, 'with percentage:', this.discountPercentage);
-        // TODO: Add discount logic here
+        if (this.discountPercentage != null) {
+            this.firestoreService.updateOrderDiscount(orderId, this.discountPercentage);
+            this.orders = this.orders.map(order => order.id === orderId ? { ...order, discountPercentage: this.discountPercentage! } : order);
+        }
         this.showingDiscountInput = null;
         this.discountPercentage = null;
     }

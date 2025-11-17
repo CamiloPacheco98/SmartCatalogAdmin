@@ -9,6 +9,7 @@ export interface Order {
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
     total: number;
     user: User;
+    discountPercentage: number | null;
 }
 
 export class OrderModel implements Order {
@@ -19,7 +20,7 @@ export class OrderModel implements Order {
     status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
     total: number;
     user: User;
-
+    discountPercentage: number;
     constructor(orderData: Order) {
         this.adminUid = orderData.adminUid;
         this.id = orderData.id;
@@ -28,6 +29,7 @@ export class OrderModel implements Order {
         this.status = orderData.status;
         this.total = orderData.total;
         this.user = orderData.user;
+        this.discountPercentage = orderData.discountPercentage || 0;
     }
 
 }

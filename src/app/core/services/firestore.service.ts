@@ -190,7 +190,7 @@ export class FirestoreService {
 
   async getAllUsers(adminUid: string): Promise<User[]> {
     try {
-      const usersCollection = query(collection(this.firestore, "users"), where("adminUid", "==", adminUid), orderBy("updatedAt", "desc"));
+      const usersCollection = query(collection(this.firestore, "users"), where("adminUid", "==", adminUid), orderBy("createdAt", "desc"));
       const querySnapshot = await getDocs(usersCollection);
       const users: User[] = [];
       querySnapshot.forEach((doc) => {
@@ -222,7 +222,7 @@ export class FirestoreService {
 
   async getAllOrders(adminUid: string): Promise<OrderModel[]> {
     try {
-      const ordersCollection = query(collection(this.firestore, "orders"), where("adminUid", "==", adminUid), orderBy("updatedAt", "desc"));
+      const ordersCollection = query(collection(this.firestore, "orders"), where("adminUid", "==", adminUid), orderBy("createdAt", "desc"));
       const querySnapshot = await getDocs(ordersCollection);
       const orders: OrderModel[] = [];
       querySnapshot.forEach((doc) => {
@@ -233,6 +233,16 @@ export class FirestoreService {
     } catch (error) {
       console.error("Error getting all orders:", error);
       throw new Error("Error al obtener la lista de pedidos");
+    }
+  }
+  
+  async updateOrderDiscount(orderId: string, discountPercentage: number): Promise<void> {
+    try {
+      const orderDocRef = doc(this.firestore, "orders", orderId);
+      await setDoc(orderDocRef, { discountPercentage, updatedAt: serverTimestamp() }, { merge: true });
+    } catch (error) {
+      console.error("Error updating order discount:", error);
+      throw new Error("Error al actualizar el descuento de la orden");
     }
   }
 }
