@@ -262,6 +262,60 @@
   min-width: 80px;
 }
 
+.btn-discount {
+  background-color: var(--success-color);
+  color: var(--white);
+  border: none;
+}
+
+.btn-discount:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn-apply {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+}
+
+.btn-apply:hover {
+  opacity: 0.9;
+}
+
+.discount-section {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--light-gray);
+  border-top: 1px solid var(--border-color);
+}
+
+.discount-input-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.discount-input {
+  flex: 1;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.discount-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.discount-symbol {
+  font-size: 0.875rem;
+  font-weight: var(--font-semibold);
+  color: var(--text-color);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .orders-container {
@@ -301,6 +355,15 @@
   }
   
   .btn-sm {
+    width: 100%;
+  }
+  
+  .discount-input-group {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .discount-input {
     width: 100%;
   }
 }

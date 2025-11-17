@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OrderModel } from '../../../../core/models/order.model';
 import { FirestoreService } from '../../../../core/services/firestore.service';
@@ -9,7 +10,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 @Component({
     selector: 'app-orders',
     standalone: true,
-    imports: [CommonModule, TranslatePipe],
+    imports: [CommonModule, FormsModule, TranslatePipe],
     templateUrl: './orders.component.html',
     styleUrls: ['./orders.component.css']
 })
@@ -20,6 +21,8 @@ export class OrdersComponent implements OnInit {
     totalOrders = 0;
     deliveredOrders = 0;
     pendingOrders = 0;
+    showingDiscountInput: string | null = null;
+    discountPercentage: number | null = null;
 
     constructor(
         private firestoreService: FirestoreService,
@@ -61,5 +64,22 @@ export class OrdersComponent implements OnInit {
 
     viewOrderDetails(orderId: string): void {
         this.router.navigate(['/dashboard/orders', orderId], { state: { order: this.orders.find(o => o.id === orderId) } });
+    }
+
+    toggleDiscountInput(orderId: string): void {
+        if (this.showingDiscountInput === orderId) {
+            this.showingDiscountInput = null;
+            this.discountPercentage = null;
+        } else {
+            this.showingDiscountInput = orderId;
+            this.discountPercentage = null;
+        }
+    }
+
+    applyDiscount(orderId: string): void {
+        console.log('DEBUG: Applying discount to order', orderId, 'with percentage:', this.discountPercentage);
+        // TODO: Add discount logic here
+        this.showingDiscountInput = null;
+        this.discountPercentage = null;
     }
 }

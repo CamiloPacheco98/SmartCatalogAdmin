@@ -73,6 +73,25 @@
             }}</button>
           <button class="btn btn-secondary btn-sm" *ngIf="order.status === 'processing'">{{ 'app.orders.ship' |
             translate }}</button>
+          <button class="btn btn-discount btn-sm" (click)="toggleDiscountInput(order.id)">
+            {{ showingDiscountInput === order.id ? ('app.orders.cancel' | translate) : ('app.orders.addDiscount' | translate) }}
+          </button>
+        </div>
+        
+        <div class="discount-section" *ngIf="showingDiscountInput === order.id">
+          <div class="discount-input-group">
+            <input 
+              type="number" 
+              class="discount-input" 
+              placeholder="{{ 'app.orders.enterDiscountPercentage' | translate }} (e.g., 10)"
+              min="0"
+              max="100"
+              [(ngModel)]="discountPercentage"
+              (keyup.enter)="applyDiscount(order.id)"
+            >
+            <span class="discount-symbol">%</span>
+            <button class="btn btn-apply btn-sm" (click)="applyDiscount(order.id)">{{ 'app.orders.apply' | translate }}</button>
+          </div>
         </div>
       </div>
     </div>

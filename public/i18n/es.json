@@ -129,6 +129,10 @@
       "ship": "Enviar",
       "noOrdersYet": "No hay órdenes",
       "newOrdersWillShowUpHereAsSoonAsCustomersPlaceThem": "Las órdenes aparecerán aquí una vez que los clientes las coloquen.",
+      "addDiscount": "Agregar Descuento",
+      "cancel": "Cancelar",
+      "enterDiscountPercentage": "Ingrese el porcentaje de descuento (ej: 10)",
+      "apply": "Aplicar",
       "error": {
         "loadingOrders": "Error al cargar las órdenes"
       },

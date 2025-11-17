@@ -129,6 +129,10 @@
       "ship": "Ship",
       "noOrdersYet": "No orders yet",
       "newOrdersWillShowUpHereAsSoonAsCustomersPlaceThem": "New orders will show up here as soon as customers place them.",
+      "addDiscount": "Add Discount",
+      "cancel": "Cancel",
+      "enterDiscountPercentage": "Enter discount percentage (e.g., 10)",
+      "apply": "Apply",
       "error": {
         "loadingOrders": "Error loading orders"
       },
