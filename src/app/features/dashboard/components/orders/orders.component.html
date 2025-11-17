@@ -58,9 +58,13 @@
                 <span class="date-label">{{ 'app.orders.createdLabel' | translate }}:</span>
                 <span class="date-value">{{ order.createdAt | date:"d 'de' MMMM 'de' y, HH:mm" }}</span>
               </div>
+              <div class="order-discount" *ngIf="order.discountPercentage != null && order.discountPercentage > 0">
+                <span class="discount-label">{{ 'app.orders.discountLabel' | translate }}:</span>
+                <span class="discount-value">{{ order.discountPercentage }}%</span>
+              </div>
               <div class="order-total">
                 <span class="total-label">{{ 'app.orders.totalLabel' | translate }}:</span>
-                <span class="total-value">{{ order.total - (order.total * order.discountPercentage / 100) | currency:'COP' : 'symbol' : '1.0-0' }}</span>
+                <span class="total-value">{{ order.total - (order.total * (order.discountPercentage) / 100) | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
             </div>
           </div>

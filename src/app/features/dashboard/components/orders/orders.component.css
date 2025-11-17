@@ -220,14 +220,16 @@
 }
 
 .order-date,
-.order-total {
+.order-total,
+.order-discount {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
 }
 
 .date-label,
-.total-label {
+.total-label,
+.discount-label {
   font-size: 0.75rem;
   color: var(--medium-gray);
   font-weight: var(--font-medium);

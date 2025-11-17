@@ -41,9 +41,13 @@
           <span class="label">{{ 'app.orderDetails.subtotalLabel' | translate }}:</span>
           <span class="value">{{ subtotal | currency:'COP' : 'symbol' : '1.0-0' }}</span>
         </div>
+        <div class="info-row" *ngIf="order.discountPercentage != null && order.discountPercentage > 0">
+          <span class="label">{{ 'app.orderDetails.discountLabel' | translate }}:</span>
+          <span class="value">{{ order.discountPercentage }}%</span>
+        </div>
         <div class="info-row total-row">
           <span class="label">{{ 'app.orderDetails.totalLabel' | translate }}:</span>
-          <span class="value total-amount">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
+          <span class="value total-amount">{{ order.total - (order.total * (order.discountPercentage) / 100) | currency:'COP' : 'symbol' : '1.0-0' }}</span>
         </div>
 
         <!-- Expandable Products Detail -->
@@ -70,9 +74,13 @@
                 <span class="label">{{ 'app.orderDetails.subtotalLabel' | translate }}:</span>
                 <span class="value">{{ subtotal | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
+              <div class="breakdown-row" *ngIf="order.discountPercentage != null && order.discountPercentage > 0">
+                <span class="label">{{ 'app.orderDetails.discountLabel' | translate }}:</span>
+                <span class="value">{{ order.discountPercentage }}%</span>
+              </div>
               <div class="breakdown-row total-row">
                 <span class="label">{{ 'app.orderDetails.totalLabel' | translate }}:</span>
-                <span class="value total-amount">{{ order.total | currency:'COP' : 'symbol' : '1.0-0' }}</span>
+                <span class="value total-amount">{{ order.total - (order.total * (order.discountPercentage || 0) / 100) | currency:'COP' : 'symbol' : '1.0-0' }}</span>
               </div>
             </div>
           </div>
